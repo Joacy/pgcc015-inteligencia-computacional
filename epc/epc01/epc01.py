@@ -75,7 +75,7 @@ while i < rows:
     y_test[i] += x_test[i][j] * weights[j];
     j = j + 1;
   if (sinal(y_test[i]) == 1):
-    print('X pertence a classe A');
+    print('O óleo pertence a classe C2');
   else:
-    print('X pertence a classe B');
+    print('O óleo pertence a classe C1');
   i = i + 1;
