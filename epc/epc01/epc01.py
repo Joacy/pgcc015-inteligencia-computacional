@@ -41,7 +41,7 @@ u = np.zeros((rows));
 d = np.zeros((rows));
 
 # Inicialização da taxa de aprendizado
-eta = 0.1;
+eta = 0.01;
 
 error = True;
 while (error):
