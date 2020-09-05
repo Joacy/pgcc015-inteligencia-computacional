@@ -30,7 +30,7 @@ cols = x_train.columns.size;
 rows = int(x_train.size / cols);
 
 # Inicialização do vetor de pesos
-weights = np.random.rand(range);
+weights = np.random.rand(cols);
 
 x = np.array(x_train);
 
