@@ -24,6 +24,9 @@ y_train = dataset.iloc[:,4:5];
 def sinal(u):
   return 1 if u >= 0 else -1
 
+# Inicialização da taxa de aprendizado
+eta = 0.01;
+
 import numpy as np
 
 cols = x_train.columns.size;
@@ -32,6 +35,9 @@ rows = int(x_train.size / cols);
 # Inicialização do vetor de pesos
 weights = np.random.rand(cols);
 
+print(weights);
+
+# Treinamento
 x = np.array(x_train);
 
 y = np.array(y_train);
@@ -39,9 +45,6 @@ y = np.array(y_train);
 u = np.zeros((rows));
 
 d = np.zeros((rows));
-
-# Inicialização da taxa de aprendizado
-eta = 0.01;
 
 error = True;
 while (error):

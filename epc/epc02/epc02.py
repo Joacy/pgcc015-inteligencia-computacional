@@ -24,9 +24,26 @@ y_train = dataset.iloc[:,5:6];
 def sinal(u):
   return 1 if u >= 0 else -1
 
+# Cálculo do Erro Quadrático Médio
+
+def calc_eqm(x, d, w):
+  eqm = 0;
+  cols = w.size;
+  rows = int(x.size / cols);
+  u = np.zeros((rows));
+
+  i = 0;
+  while i < rows:
+    j = 0;
+    while j < cols:
+      u[i] += x[i][j] * w[j];
+      eqm = eqm + np.exp2(d[i] - u[i]);
+      j = j + 1;
+    i = i + 1;
+  return (eqm / (rows * cols));
+
 # Inicialização da taxa de aprendizado e da precisão
 eta = 0.0025;
-e = 1e-6;
 
 import numpy as np
 
@@ -35,6 +52,40 @@ rows = int(x_train.size / cols);
 
 # Inicialização do vetor de pesos
 weights = np.random.rand(cols);
+
+print(weights);
+
+# Treinamento
+x = np.array(x_train);
+
+d = np.array(y_train);
+
+u = np.zeros((rows));
+
+eqm_prev = 1e6;
+eqm_current = 1;
+error = 1e-6;
+epochs = 0;
+
+while (abs(eqm_current - eqm_prev) > error):
+  u = np.zeros((rows));
+
+  print(abs(eqm_current - eqm_prev));
+  
+  eqm_prev = eqm_current;
+  i = 0;
+  while i < rows:
+    j = 0;
+    while j < cols:
+      u[i] += x[i][j] * weights[j];
+      weights[j] = weights[j] + eta*(d[i] - u[i])*x[i][j];
+      j = j + 1;
+    i = i + 1;
+
+  print('weights: ', weights);
+  eqm_current = calc_eqm(x, d, weights);
+  print('eqm: ', eqm_current);
+  epochs = epochs + 1;
 
 # Teste
 rows = int(x_test.size / cols);
