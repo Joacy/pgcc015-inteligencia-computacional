@@ -32,14 +32,14 @@ def sinal(u):
 def calc_eqm(x, d, w):
   eqm = 0;
   cols = w.size;
-  rows = int(x.size / cols);
-  u = np.zeros((rows));
+  rows = d.size;
   
   for i in range(rows):
+    u = np.zeros((rows));
     for j in range(cols):
       u[i] += x[i][j] * w[j];
-      eqm = eqm + np.exp2(d[i] - u[i]);
-  return (eqm / (rows * cols));
+    eqm = eqm + np.exp2(d[i] - u[i]);
+  return (eqm / rows);
 
 # Inicialização da taxa de aprendizado e da precisão
 eta = 0.0025;
@@ -57,25 +57,24 @@ x = np.array(x_train);
 
 d = np.array(y_train);
 
-u = np.zeros((rows));
-
 eqm_prev = 1e6;
 eqm_current = 1;
 error = 1e-6;
 epochs = 0;
 
-errors = np.zeros(500);
+errors = np.zeros(4000);
 
 while (abs(eqm_current - eqm_prev) > error):
-  u = np.zeros((rows));
 
   print('|eqm_current - eqm_prev|:', abs(eqm_current - eqm_prev));
   
   eqm_prev = eqm_current;
   
   for i in range(rows):
+    u = np.zeros((rows));
     for j in range(cols):
       u[i] += x[i][j] * weights[j];
+    for j in range(cols):
       weights[j] = weights[j] + eta*(d[i] - u[i])*x[i][j];
 
   print('weights: ', weights);
@@ -84,8 +83,8 @@ while (abs(eqm_current - eqm_prev) > error):
 
   errors[epochs] = eqm_current;
   epochs = epochs + 1;
-  if (epochs > 1000):
-    break;
+  # if (epochs > 999):
+  #   break;
 
 # Teste
 rows = int(x_test.size / cols);
@@ -93,9 +92,11 @@ x_test = np.array(x_test);
 y_test = np.zeros(rows);
 
 for i in range(rows):
+  u = np.zeros((rows));
   for j in range(cols):
-    y_test[i] += x_test[i][j] * weights[j];
-  if (sinal(y_test[i]) == 1):
+    u[i] += x_test[i][j] * weights[j];
+  y_test[i] = sinal(sinal(u[i]));  
+  if (y_test[i] == 1):
     print('O sinal é para a válvula B');
   else:
     print('O sinal é para a válvula A');

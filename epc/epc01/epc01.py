@@ -43,8 +43,6 @@ x = np.array(x_train);
 
 d = np.array(y_train);
 
-u = np.zeros((rows));
-
 y = np.zeros((rows));
 
 epochs = 0;
@@ -53,6 +51,7 @@ error = True;
 while (error):
   error = False;
   for i in range(rows):
+    u = np.zeros((rows));
     for j in range(cols):
       u[i] += x[i][j] * weights[j];
     y[i] = sinal(u[i]);
