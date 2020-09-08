@@ -10,6 +10,9 @@ Original file is located at
 # Importando pandas 
 import pandas as pd
 
+# Importando numpy
+import numpy as np
+
 # Importando dados de treinamento e dados de teste
 dataset = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc01/dados.txt', sep=' ');
 x_test = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc01/teste.txt', sep=' ');
@@ -27,8 +30,6 @@ def sinal(u):
 # Inicialização da taxa de aprendizado
 eta = 0.01;
 
-import numpy as np
-
 cols = x_train.columns.size;
 rows = int(x_train.size / cols);
 
@@ -40,45 +41,43 @@ print(weights);
 # Treinamento
 x = np.array(x_train);
 
-y = np.array(y_train);
+d = np.array(y_train);
 
 u = np.zeros((rows));
 
-d = np.zeros((rows));
+y = np.zeros((rows));
+
+epochs = 0;
 
 error = True;
 while (error):
-  i = 0;
-  while i < rows:
-    j = 0;
-    while j < cols:
+  error = False;
+  for i in range(rows):
+    for j in range(cols):
       u[i] += x[i][j] * weights[j];
-      j = j + 1;
-    d[i] = sinal(u[i]);
+    y[i] = sinal(u[i]);
     
     if (d[i] != y[i]):
-      k = 0
-      while k < cols:
+      for k in range(cols):
         weights[k] = weights[k] + eta*(d[i] - y[i])*x[i][k];
-        k = k + 1;
-      error = True;
+        error = True;
       print(weights)
-    i = i + 1;
-  error = False
+  epochs = epochs + 1;
+  if (epochs > 999):
+    break;
 
 # Teste
 rows = int(x_test.size / cols);
 x_test = np.array(x_test);
 y_test = np.zeros(rows);
 
-i = 0;
-while i < rows:
-  j = 0;
-  while j < cols:
+for i in range(rows):
+  for j in range(cols):
     y_test[i] += x_test[i][j] * weights[j];
-    j = j + 1;
   if (sinal(y_test[i]) == 1):
     print('O óleo pertence a classe C2');
   else:
     print('O óleo pertence a classe C1');
-  i = i + 1;
+
+print('épocas:', epochs, '\npesos finais:', weights)
+

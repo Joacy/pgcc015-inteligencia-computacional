@@ -10,6 +10,9 @@ Original file is located at
 # Importando pandas 
 import pandas as pd
 
+# Importando numpy
+import numpy as np
+
 # Importando dados de treinamento e dados de teste
 dataset = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc02/dados.txt', sep=' ');
 x_test = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc02/teste.txt', sep=' ');
@@ -31,21 +34,15 @@ def calc_eqm(x, d, w):
   cols = w.size;
   rows = int(x.size / cols);
   u = np.zeros((rows));
-
-  i = 0;
-  while i < rows:
-    j = 0;
-    while j < cols:
+  
+  for i in range(rows):
+    for j in range(cols):
       u[i] += x[i][j] * w[j];
       eqm = eqm + np.exp2(d[i] - u[i]);
-      j = j + 1;
-    i = i + 1;
   return (eqm / (rows * cols));
 
 # Inicialização da taxa de aprendizado e da precisão
 eta = 0.0025;
-
-import numpy as np
 
 cols = x_train.columns.size;
 rows = int(x_train.size / cols);
@@ -67,39 +64,52 @@ eqm_current = 1;
 error = 1e-6;
 epochs = 0;
 
+errors = np.zeros(500);
+
 while (abs(eqm_current - eqm_prev) > error):
   u = np.zeros((rows));
 
-  print(abs(eqm_current - eqm_prev));
+  print('|eqm_current - eqm_prev|:', abs(eqm_current - eqm_prev));
   
   eqm_prev = eqm_current;
-  i = 0;
-  while i < rows:
-    j = 0;
-    while j < cols:
+  
+  for i in range(rows):
+    for j in range(cols):
       u[i] += x[i][j] * weights[j];
       weights[j] = weights[j] + eta*(d[i] - u[i])*x[i][j];
-      j = j + 1;
-    i = i + 1;
 
   print('weights: ', weights);
   eqm_current = calc_eqm(x, d, weights);
   print('eqm: ', eqm_current);
+
+  errors[epochs] = eqm_current;
   epochs = epochs + 1;
+  if (epochs > 1000):
+    break;
 
 # Teste
 rows = int(x_test.size / cols);
 x_test = np.array(x_test);
 y_test = np.zeros(rows);
 
-i = 0;
-while i < rows:
-  j = 0;
-  while j < cols:
+for i in range(rows):
+  for j in range(cols):
     y_test[i] += x_test[i][j] * weights[j];
-    j = j + 1;
   if (sinal(y_test[i]) == 1):
     print('O sinal é para a válvula B');
   else:
     print('O sinal é para a válvula A');
-  i = i + 1;
+
+print('épocas:', epochs, '\neqm_current - eqm_prev:', abs(eqm_current - eqm_prev),'\neqm:', eqm_current, '\npesos finais:', weights)
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+epochsAxis = np.arange(0.0, epochs);
+fig, ax = plt.subplots()
+plt.xlim(0, epochs);
+
+ax.plot(epochsAxis, errors[0:epochs])
+ax.set(xlabel='Épocas', ylabel='EQM',
+       title='EQM ao longo das épocas de treinamento')
+ax.grid()
