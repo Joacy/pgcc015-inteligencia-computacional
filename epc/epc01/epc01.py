@@ -30,20 +30,28 @@ def sinal(u):
 # Inicialização da taxa de aprendizado
 eta = 0.01;
 
-cols = x_train.columns.size;
-rows = int(x_train.size / cols);
-
-# Inicialização do vetor de pesos
-weights = np.random.rand(cols);
-
-print('Pesos iniciais:', weights);
+def initialize_weights(x):
+  cols = x_train.columns.size;
+  
+  # Inicialização do vetor de pesos
+  weights = np.random.rand(cols);
+  
+  return weights;
 
 # Treinamento
 x = np.array(x_train);
 
 d = np.array(y_train);
 
+cols = x_train.columns.size;
+
+rows = int(x_train.size / cols);
+
 y = np.zeros((rows));
+
+weights = initialize_weights(x);
+
+print('Pesos iniciais:', weights);
 
 epochs = 0;
 

@@ -38,36 +38,41 @@ def calc_eqm(x, d, w):
     u = np.zeros((rows));
     for j in range(cols):
       u[i] += x[i][j] * w[j];
-    eqm = eqm + np.exp2(d[i] - u[i]);
+    eqm = eqm + np.power(d[i] - u[i], 2);
   return (eqm / rows);
 
 # Inicialização da taxa de aprendizado e da precisão
 eta = 0.0025;
 
-cols = x_train.columns.size;
-rows = int(x_train.size / cols);
-
-# Inicialização do vetor de pesos
-weights = np.random.rand(cols);
-
-print('Pesos iniciais:', weights);
+def initialize_weights(x):
+  cols = x_train.columns.size;
+  
+  # Inicialização do vetor de pesos
+  weights = np.random.rand(cols);
+  
+  return weights;
 
 # Treinamento
 x = np.array(x_train);
 
 d = np.array(y_train);
 
-eqm_prev = 1e6;
+cols = x_train.columns.size;
+
+rows = int(x_train.size / cols);
+
+weights = initialize_weights(x);
+
+print('Pesos iniciais:', weights);
+
+eqm_prev = 99999999;
 eqm_current = 1;
-error = 1e-6;
+error = 1e-06;
 epochs = 0;
 
 errors = np.zeros(4000);
 
 while (abs(eqm_current - eqm_prev) > error):
-
-  # print('|eqm_current - eqm_prev|:', abs(eqm_current - eqm_prev));
-  
   eqm_prev = eqm_current;
   
   for i in range(rows):
@@ -77,9 +82,7 @@ while (abs(eqm_current - eqm_prev) > error):
     for j in range(cols):
       weights[j] = weights[j] + eta*(d[i] - u[i])*x[i][j];
 
-  # print('weights: ', weights);
   eqm_current = calc_eqm(x, d, weights);
-  # print('eqm: ', eqm_current);
 
   errors[epochs] = eqm_current;
   epochs = epochs + 1;
