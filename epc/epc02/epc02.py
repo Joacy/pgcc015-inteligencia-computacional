@@ -14,8 +14,8 @@ import pandas as pd
 import numpy as np
 
 # Importando dados de treinamento e dados de teste
-dataset = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc02/dados.txt', sep=' ');
-x_test = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc02/teste.txt', sep=' ');
+dataset = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc02/dados.txt', header=None, sep=' ');
+x_test = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc02/teste.txt', header=None, sep=' ');
 
 # Separando entradas e saídas para o treinamento
 x_train = dataset.iloc[:,0:5];
@@ -50,7 +50,7 @@ rows = int(x_train.size / cols);
 # Inicialização do vetor de pesos
 weights = np.random.rand(cols);
 
-print(weights);
+print('Pesos iniciais:', weights);
 
 # Treinamento
 x = np.array(x_train);
@@ -66,7 +66,7 @@ errors = np.zeros(4000);
 
 while (abs(eqm_current - eqm_prev) > error):
 
-  print('|eqm_current - eqm_prev|:', abs(eqm_current - eqm_prev));
+  # print('|eqm_current - eqm_prev|:', abs(eqm_current - eqm_prev));
   
   eqm_prev = eqm_current;
   
@@ -77,14 +77,14 @@ while (abs(eqm_current - eqm_prev) > error):
     for j in range(cols):
       weights[j] = weights[j] + eta*(d[i] - u[i])*x[i][j];
 
-  print('weights: ', weights);
+  # print('weights: ', weights);
   eqm_current = calc_eqm(x, d, weights);
-  print('eqm: ', eqm_current);
+  # print('eqm: ', eqm_current);
 
   errors[epochs] = eqm_current;
   epochs = epochs + 1;
-  # if (epochs > 999):
-  #   break;
+
+print('Épocas de treinamento:', epochs, '\nPesos finais:', weights);
 
 # Teste
 rows = int(x_test.size / cols);
@@ -100,8 +100,6 @@ for i in range(rows):
     print('O sinal é para a válvula B');
   else:
     print('O sinal é para a válvula A');
-
-print('épocas:', epochs, '\neqm_current - eqm_prev:', abs(eqm_current - eqm_prev),'\neqm:', eqm_current, '\npesos finais:', weights)
 
 import matplotlib
 import matplotlib.pyplot as plt

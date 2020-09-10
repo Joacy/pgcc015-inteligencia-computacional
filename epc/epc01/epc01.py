@@ -14,8 +14,8 @@ import pandas as pd
 import numpy as np
 
 # Importando dados de treinamento e dados de teste
-dataset = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc01/dados.txt', sep=' ');
-x_test = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc01/teste.txt', sep=' ');
+dataset = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc01/dados.txt', header=None, sep=' ');
+x_test = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc01/teste.txt', header=None, sep=' ');
 
 # Separando entradas e saídas para o treinamento
 x_train = dataset.iloc[:,0:4];
@@ -36,7 +36,7 @@ rows = int(x_train.size / cols);
 # Inicialização do vetor de pesos
 weights = np.random.rand(cols);
 
-print(weights);
+print('Pesos iniciais:', weights);
 
 # Treinamento
 x = np.array(x_train);
@@ -60,10 +60,9 @@ while (error):
       for k in range(cols):
         weights[k] = weights[k] + eta*(d[i] - y[i])*x[i][k];
         error = True;
-      print(weights)
   epochs = epochs + 1;
-  if (epochs > 999):
-    break;
+
+print('Épocas de treinamento:', epochs, '\nPesos finais:', weights);
 
 # Teste
 rows = int(x_test.size / cols);
@@ -77,6 +76,3 @@ for i in range(rows):
     print('O óleo pertence a classe C2');
   else:
     print('O óleo pertence a classe C1');
-
-print('épocas:', epochs, '\npesos finais:', weights)
-
