@@ -81,11 +81,12 @@ while (abs(eqm_current - eqm_prev) > error):
       u[i] += x[i][j] * weights[j];
     for j in range(cols):
       weights[j] = weights[j] + eta*(d[i] - u[i])*x[i][j];
+  
+  epochs = epochs + 1;
 
   eqm_current = calc_eqm(x, d, weights);
-
+  
   errors[epochs] = eqm_current;
-  epochs = epochs + 1;
 
 print('Épocas de treinamento:', epochs, '\nPesos finais:', weights);
 
@@ -107,11 +108,11 @@ for i in range(rows):
 import matplotlib
 import matplotlib.pyplot as plt
 
-epochsAxis = np.arange(0.0, epochs);
-fig, ax = plt.subplots()
-plt.xlim(0, epochs);
+fig, ax = plt.subplots();
+plt.xlim(-50, epochs + 1);
 
-ax.plot(epochsAxis, errors[0:epochs])
-ax.set(xlabel='Épocas', ylabel='EQM',
-       title='EQM ao longo das épocas de treinamento')
-ax.grid()
+ax.plot(errors[1:epochs + 1]);
+ax.set(xlabel='Nº de Épocas',
+       ylabel='EQM',
+       title='EQM ao longo das épocas de treinamento');
+ax.grid();
