@@ -1,0 +1,32 @@
+White Wine Quality dataset
+
+1: Description.
+
+The dataset is related to white variant of the Portuguese Vinho Verde wine. Due to privacy and logistic issues, only physicochemical (inputs) and sensory (the output) variables are available (e.g. there is no data about grape types, wine brand, wine selling price, etc.).
+
+These datasets can be viewed as classification or regression tasks. The classes are ordered and not balanced (e.g. there are munch more normal wines than excellent or poor ones).
+
+2: Type.			Classification	
+3: Origin.			Real world
+4: Instances.		4898
+5: Features.		11
+6: Classes.			11	
+7: Missing values.	No
+
+8: Header.
+
+@relation winequality-white
+@attribute FixedAcidity real[3.8,14.2]
+@attribute VolatileAcidity real[0.08,1.1]
+@attribute CitricAcid real[0.0,1.66]
+@attribute ResidualSugar real[0.6,65.8]
+@attribute Chlorides real[0.0090,0.346]
+@attribute FreeSulfurDioxide real[2.0,289.0]
+@attribute TotalSulfurDioxide real[9.0,440.0]
+@attribute Density real[0.98711,1.03898]
+@attribute PH real[2.72,3.82]
+@attribute Sulphates real[0.22,1.08]
+@attribute Alcohol real[8.0,14.2]
+@attribute Quality{0,1,2,3,4,5,6,7,8,9,10}
+@inputs FixedAcidity, VolatileAcidity, CitricAcid, ResidualSugar, Chlorides, FreeSulfurDioxide, TotalSulfurDioxide, Density, PH, Sulphates, Alcohol
+@outputs Quality
