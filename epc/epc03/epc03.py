@@ -21,10 +21,17 @@ for i in range(1):
   # Separando entradas e saídas para o treinamento
   x_train = train_data.iloc[:,0:4];
   y_train = train_data.iloc[:,4:5];
-
+  
   # Separando entradas e saídas para o teste
   x_test = test_data.iloc[:,0:4];
   y_test = test_data.iloc[:,4:5];
+
+  # Adicionando o bias como uma entrada
+  bias_train = (-1 * np.ones(y_train.size)).tolist();
+  x_train['bias'] = bias_train;
+
+  bias_test = (-1 * np.ones(y_test.size)).tolist();
+  x_test['bias'] = bias_test;
 
 # # Importando dados de treinamento e dados de teste para Glass Identification data set
 # for i in range(10):
@@ -82,7 +89,7 @@ def generate_layers(input_size, hidden_size, output_size):
 
   return hidden_layer, output_layer;
 
-hidden_layer, output_layer = generate_layers(x_train.columns.size, x_train.columns.size * 2, y_train.columns.size);
+hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, y_train.columns.size);
 
 x = np.array(x_train);
 
