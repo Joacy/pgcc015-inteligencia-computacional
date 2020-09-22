@@ -130,12 +130,13 @@ y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
 
 # Fase de forward
 for i in range(int(x_train.size / x_train.columns.size)):
+  # Cálculo da saída da camada escondida
   for j in range(hidden_layer.shape[0]):
     for k in range(hidden_layer.shape[1]):
       u[i][j] += x[i][k] * hidden_layer[j][k];
   u[i][hidden_layer.shape[0]] = -1;
   
-for i in range(int(x_train.size / x_train.columns.size)):
+  # Cálculo da saída da rede
   for j in range(output_layer.shape[0]):
     for k in range(output_layer.shape[1]):
       y[i][j] += u[i][k] * output_layer[j][k];
