@@ -13,6 +13,15 @@ import pandas as pd
 # Importando numpy
 import numpy as np
 
+def generate_empty_matrix(rows, cols):
+  matrix = [];
+  for i in range(rows):
+    line = [];
+    for j in range(cols):
+      line.append(np.zeros(1)[0]);
+    matrix.append(line);
+  return np.array(matrix);
+
 # Importando dados de treinamento e dados de teste para Iris plants data set
 for i in range(1):
   train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',');
@@ -20,20 +29,43 @@ for i in range(1):
 
   # Separando entradas e saídas para o treinamento
   x_train = train_data.iloc[:,0:4];
-  y_train = train_data.iloc[:,4:5];
+  y_train_text = train_data.iloc[:,4:5];
   
   # Separando entradas e saídas para o teste
   x_test = test_data.iloc[:,0:4];
-  y_test = test_data.iloc[:,4:5];
+  y_test_text = test_data.iloc[:,4:5];
 
   # Adicionando o bias como uma entrada
-  bias_train = (-1 * np.ones(y_train.size)).tolist();
+  bias_train = (-1 * np.ones(y_train_text.size)).tolist();
   x_train['bias'] = bias_train;
 
-  bias_test = (-1 * np.ones(y_test.size)).tolist();
+  bias_test = (-1 * np.ones(y_test_text.size)).tolist();
   x_test['bias'] = bias_test;
 
   possible_outputs = 3;
+
+  # Codificando as saídas do treinamento e do teste
+  y_train = generate_empty_matrix(y_train_text.size, possible_outputs);
+  out_train = np.array(y_train_text);
+  
+  for i in range(y_train_text.size):
+    if out_train[i] == ' Iris-setosa':
+      y_train[i][0] = 1;
+    elif out_train[i] == ' Iris-versicolor':
+      y_train[i][1] = 1;
+    elif out_train[i] == ' Iris-virginica':
+      y_train[i][2] = 1;
+  
+  y_test = generate_empty_matrix(y_test_text.size, possible_outputs);
+  out_test = np.array(y_test_text);
+
+  for i in range(y_test_text.size):
+    if out_test[i] == ' Iris-setosa':
+      y_test[i][0] = 1;
+    elif out_test[i] == ' Iris-versicolor':
+      y_test[i][1] = 1;
+    elif out_test[i] == ' Iris-virginica':
+      y_test[i][2] = 1;
 
 # # Importando dados de treinamento e dados de teste para Glass Identification data set
 # for i in range(10):
@@ -94,22 +126,13 @@ def generate_matrix(rows, cols):
     matrix.append(line);
   return np.array(matrix);
 
-def generate_empty_matrix(rows, cols):
-  matrix = [];
-  for i in range(rows):
-    line = [];
-    for j in range(cols):
-      line.append(np.zeros(1)[0]);
-    matrix.append(line);
-  return np.array(matrix);
-
 def generate_layers(input_size, hidden_size, output_size):
   hidden_layer = generate_matrix(hidden_size, input_size + 1);
   output_layer = generate_matrix(output_size, hidden_size + 1);
 
   return hidden_layer, output_layer;
 
-hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, y_train.columns.size*possible_outputs)
+hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, possible_outputs)
 x = np.array(x_train);
 
 eta = 0.1;
