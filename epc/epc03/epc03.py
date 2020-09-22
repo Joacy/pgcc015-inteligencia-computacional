@@ -148,43 +148,61 @@ errors = np.zeros(4000);
 
 # while (abs(eqm_current - eqm_prev) > error):
 #   eqm_prev = eqm_current;
+while (epochs == 0):
+  u = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
+  u[:, (hidden_layer.shape[1] - 1)] = -1;
+  gu = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
 
-u = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
-u[:, (hidden_layer.shape[1] - 1)] = -1;
+  y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
+  gy = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
 
-du = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
-y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
-dy = y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
+  delta_output = generate_empty_matrix(y.shape[0], y.shape[1]);
+  delta_hidden = generate_empty_matrix(u.shape[0], hidden_layer.shape[0]);
 
-# Fase de forward
-for i in range(int(x_train.size / x_train.columns.size)):
-  # Cálculo da saída da camada escondida
-  for j in range(hidden_layer.shape[0]):
-    for k in range(hidden_layer.shape[1]):
-      u[i][j] += x[i][k] * hidden_layer[j][k];
-  du = dsigmoid_du(u);
-  du[:, (hidden_layer.shape[1] - 1)] = -1;
+  # Fase de forward
+  for i in range(int(x_train.size / x_train.columns.size)):
+    # Cálculo da saída da camada escondida
+    for j in range(hidden_layer.shape[0]):
+      for k in range(hidden_layer.shape[1]):
+        u[i][j] += x[i][k] * hidden_layer[j][k];
+    gu = sigmoid(u);
+    gu[:, (hidden_layer.shape[1] - 1)] = -1;
+    
+    # Cálculo da saída da rede
+    for j in range(output_layer.shape[0]):
+      for k in range(output_layer.shape[1]):
+        y[i][j] += gu[i][k] * output_layer[j][k];
+    gy = sigmoid(y)
+
+  # Fase de Backward
+  for i in range(int(x_train.size / x_train.columns.size)):
+    for j in range(output_layer.shape[0]):
+      delta_output[i][j] = (y_train[i][j] - gy[i][j]) * dsigmoid_du(gy[i][j]);
+
+    for j in range(hidden_layer.shape[0]):
+      for k in range(output_layer.shape[0]):
+        delta_hidden[i][j] = dsigmoid_du(gu[i][j]) * delta_output[i][k] * output_layer[k,j];
   
-  # Cálculo da saída da rede
-  for j in range(output_layer.shape[0]):
-    for k in range(output_layer.shape[1]):
-      y[i][j] += du[i][k] * output_layer[j][k];
-  dy = dsigmoid_du(y)
-#   epochs = epochs + 1;
-
-#   eqm_current = calc_eqm(x, d, weights);
   
-#   errors[epochs] = eqm_current;
+  epochs = epochs + 1;
 
-# print('Épocas de treinamento:', epochs);
+  # eqm_current = calc_eqm(x, d, weights);
+  
+  # errors[epochs] = eqm_current;
+
+print('Épocas de treinamento:', epochs);
+
+delta_output
+
+delta_hidden
 
 y
 
-dy
+gy
 
 u
 
-du
+gu
 
 x
 
