@@ -111,11 +111,13 @@ for i in range(1):
 
   # possible_outputs = 11;
 
-def sigmoid(u, beta):
-  return (1 / (1 + exp(-beta * u)));
+def sigmoid(u):
+  beta = 0.5;
+  return (1 / (1 + np.exp(-beta * u)));
 
-def dsigmoid_du(u, beta):
-  return (beta * sigmoid(u, beta) * (1 - sigmoid(u, beta)));
+def dsigmoid_du(u):
+  beta = 0.5;
+  return (beta * sigmoid(u) * (1 - sigmoid(u)));
 
 def generate_matrix(rows, cols):
   matrix = [];
@@ -136,7 +138,6 @@ hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.c
 x = np.array(x_train);
 
 eta = 0.1;
-beta = 0.5;
 error = 1e-06;
 
 eqm_prev = 99999999;
@@ -148,8 +149,12 @@ errors = np.zeros(4000);
 # while (abs(eqm_current - eqm_prev) > error):
 #   eqm_prev = eqm_current;
 
-u = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[0] + 1);
+u = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
+u[:, (hidden_layer.shape[1] - 1)] = -1;
+
+du = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
 y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
+dy = y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
 
 # Fase de forward
 for i in range(int(x_train.size / x_train.columns.size)):
@@ -157,13 +162,14 @@ for i in range(int(x_train.size / x_train.columns.size)):
   for j in range(hidden_layer.shape[0]):
     for k in range(hidden_layer.shape[1]):
       u[i][j] += x[i][k] * hidden_layer[j][k];
-  u[i][hidden_layer.shape[0]] = -1;
+  du = dsigmoid_du(u);
+  du[:, (hidden_layer.shape[1] - 1)] = -1;
   
   # Cálculo da saída da rede
   for j in range(output_layer.shape[0]):
     for k in range(output_layer.shape[1]):
-      y[i][j] += u[i][k] * output_layer[j][k];
-
+      y[i][j] += du[i][k] * output_layer[j][k];
+  dy = dsigmoid_du(y)
 #   epochs = epochs + 1;
 
 #   eqm_current = calc_eqm(x, d, weights);
@@ -174,7 +180,11 @@ for i in range(int(x_train.size / x_train.columns.size)):
 
 y
 
+dy
+
 u
+
+du
 
 x
 
