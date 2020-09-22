@@ -33,6 +33,8 @@ for i in range(1):
   bias_test = (-1 * np.ones(y_test.size)).tolist();
   x_test['bias'] = bias_test;
 
+  possible_outputs = 3;
+
 # # Importando dados de treinamento e dados de teste para Glass Identification data set
 # for i in range(10):
 #   train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/glass-identification/glass-10-'+ str(i + 1) +'tra.txt', sep=',');
@@ -46,18 +48,36 @@ for i in range(1):
 #   x_test = test_data.iloc[:,0:9];
 #   y_test = test_data.iloc[:,9:10];
 
+#   # Adicionando o bias como uma entrada
+#   bias_train = (-1 * np.ones(y_train.size)).tolist();
+#   x_train['bias'] = bias_train;
+
+#   bias_test = (-1 * np.ones(y_test.size)).tolist();
+#   x_test['bias'] = bias_test;
+
+#   possible_outputs = 7;
+
 # # Importando dados de treinamento e dados de teste para White Wine Quality data set
 # for i in range(10):
 #   train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/white-wine-quality/winequality-white-10-'+ str(i + 1) +'tra.txt', sep=',');
 #   test_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/white-wine-quality/winequality-white-10-'+ str(i + 1) +'tst.txt', sep=',');
   
-#   # Separando entradas e saídas para o treinamento
-#   x_train = train_data.iloc[:,0:11];
-#   y_train = train_data.iloc[:,11:12];
+  # # Separando entradas e saídas para o treinamento
+  # x_train = train_data.iloc[:,0:11];
+  # y_train = train_data.iloc[:,11:12];
 
-#   # Separando entradas e saídas para o teste
-#   x_test = test_data.iloc[:,0:11];
-#   y_test = test_data.iloc[:,11:12];
+  # # Separando entradas e saídas para o teste
+  # x_test = test_data.iloc[:,0:11];
+  # y_test = test_data.iloc[:,11:12];
+
+  # # Adicionando o bias como uma entrada
+  # bias_train = (-1 * np.ones(y_train.size)).tolist();
+  # x_train['bias'] = bias_train;
+
+  # bias_test = (-1 * np.ones(y_test.size)).tolist();
+  # x_test['bias'] = bias_test;
+
+  # possible_outputs = 11;
 
 def sigmoid(u, beta):
   return (1 / (1 + exp(-beta * u)));
@@ -70,7 +90,7 @@ def generate_matrix(rows, cols):
   for i in range(rows):
     line = [];
     for j in range(cols):
-        line.append(np.random.rand(1)[0]);
+      line.append(np.random.rand(1)[0]);
     matrix.append(line);
   return np.array(matrix);
 
@@ -79,7 +99,7 @@ def generate_empty_matrix(rows, cols):
   for i in range(rows):
     line = [];
     for j in range(cols):
-        line.append(np.zeros(1)[0]);
+      line.append(np.zeros(1)[0]);
     matrix.append(line);
   return np.array(matrix);
 
@@ -89,15 +109,50 @@ def generate_layers(input_size, hidden_size, output_size):
 
   return hidden_layer, output_layer;
 
-hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, y_train.columns.size);
-
+hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, y_train.columns.size*possible_outputs)
 x = np.array(x_train);
 
-# for i in range(int(x_train.size / x_train.columns.size)):
-#   u = np.zeros(int(x_train.size / x_train.columns.size));
-#   for j in range(hidden_layer.shape[0]):
-#     for k in range(hidden_layer.shape[1]):
-#       u[i][k] += x[i][j] * hidden_layer[j][k];
+eta = 0.1;
+beta = 0.5;
+error = 1e-06;
+
+eqm_prev = 99999999;
+eqm_current = 1;
+epochs = 0;
+
+errors = np.zeros(4000);
+
+# while (abs(eqm_current - eqm_prev) > error):
+#   eqm_prev = eqm_current;
+
+u = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[0] + 1);
+y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
+
+# Fase de forward
+for i in range(int(x_train.size / x_train.columns.size)):
+  for j in range(hidden_layer.shape[0]):
+    for k in range(hidden_layer.shape[1]):
+      u[i][j] += x[i][k] * hidden_layer[j][k];
+  u[i][hidden_layer.shape[0]] = -1;
+  
+for i in range(int(x_train.size / x_train.columns.size)):
+  for j in range(output_layer.shape[0]):
+    for k in range(output_layer.shape[1]):
+      y[i][j] += u[i][k] * output_layer[j][k];
+
+#   epochs = epochs + 1;
+
+#   eqm_current = calc_eqm(x, d, weights);
+  
+#   errors[epochs] = eqm_current;
+
+# print('Épocas de treinamento:', epochs);
+
+y
+
+u
+
+x
 
 hidden_layer
 
