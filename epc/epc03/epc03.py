@@ -159,9 +159,10 @@ while (abs(eqm_current - eqm_prev) > error):
   gy = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
 
   delta_output = generate_empty_matrix(y.shape[0], y.shape[1]);
-  error_output = generate_empty_matrix(y.shape[0], y.shape[1]);
   delta_hidden = generate_empty_matrix(u.shape[0], hidden_layer.shape[0]);
 
+  error_output = generate_empty_matrix(y.shape[0], y.shape[1]);
+  
   # Fase de forward
   for i in range(int(x_train.size / x_train.columns.size)):
     # Cálculo da saída da camada escondida
@@ -177,8 +178,9 @@ while (abs(eqm_current - eqm_prev) > error):
 
   # Fase de Backward
   for i in range(int(x_train.size / x_train.columns.size)):
-    delta_output[i] = (y_train[i] @ dsigmoid_du(gy[i])) - (gy[i] @ dsigmoid_du(gy[i]));
-    
+    for j in range(output_layer.shape[0]):
+      delta_output[i][j] = (y_train[i][j] - gy[i][j]) * dsigmoid_du(gy[i][j]);
+
     for j in range(hidden_layer.shape[0]):
       for k in range(output_layer.shape[0]):
         delta_hidden[i][j] = dsigmoid_du(gu[i][j]) * delta_output[i][k] * output_layer[k,j];
@@ -205,3 +207,5 @@ delta_hidden
 hidden_layer
 
 output_layer
+
+u
