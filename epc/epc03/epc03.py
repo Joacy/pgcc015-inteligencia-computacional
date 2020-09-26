@@ -74,20 +74,33 @@ for i in range(1):
 
 #   # Separando entradas e saídas para o treinamento
 #   x_train = train_data.iloc[:,0:9];
-#   y_train = train_data.iloc[:,9:10];
+#   y_train_text = train_data.iloc[:,9:10];
 
 #   # Separando entradas e saídas para o teste
 #   x_test = test_data.iloc[:,0:9];
-#   y_test = test_data.iloc[:,9:10];
+#   y_test_text = test_data.iloc[:,9:10];
 
 #   # Adicionando o bias como uma entrada
-#   bias_train = (-1 * np.ones(y_train.size)).tolist();
+#   bias_train = (-1 * np.ones(y_train_text.size)).tolist();
 #   x_train['bias'] = bias_train;
 
-#   bias_test = (-1 * np.ones(y_test.size)).tolist();
+#   bias_test = (-1 * np.ones(y_test_text.size)).tolist();
 #   x_test['bias'] = bias_test;
 
 #   possible_outputs = 7;
+
+#   # Codificando as saídas do treinamento e do teste
+#   y_train = generate_empty_matrix(y_train_text.size, possible_outputs);
+#   out_train = np.array(y_train_text);
+  
+#   for i in range(y_train_text.size):
+#     y_train[i][out_train[i] - 1] = 1;
+  
+#   y_test = generate_empty_matrix(y_test_text.size, possible_outputs);
+#   out_test = np.array(y_test_text);
+
+#   for i in range(y_test_text.size):
+#     y_test[i][out_test[i] - 1] = 1;
 
 # # Importando dados de treinamento e dados de teste para White Wine Quality data set
 # for i in range(1):
@@ -96,20 +109,33 @@ for i in range(1):
   
 #   # Separando entradas e saídas para o treinamento
 #   x_train = train_data.iloc[:,0:11];
-#   y_train = train_data.iloc[:,11:12];
+#   y_train_text = train_data.iloc[:,11:12];
 
 #   # Separando entradas e saídas para o teste
 #   x_test = test_data.iloc[:,0:11];
-#   y_test = test_data.iloc[:,11:12];
+#   y_test_text = test_data.iloc[:,11:12];
 
 #   # Adicionando o bias como uma entrada
-#   bias_train = (-1 * np.ones(y_train.size)).tolist();
+#   bias_train = (-1 * np.ones(y_train_text.size)).tolist();
 #   x_train['bias'] = bias_train;
 
-#   bias_test = (-1 * np.ones(y_test.size)).tolist();
+#   bias_test = (-1 * np.ones(y_test_text.size)).tolist();
 #   x_test['bias'] = bias_test;
 
 #   possible_outputs = 11;
+
+#   # Codificando as saídas do treinamento e do teste
+#   y_train = generate_empty_matrix(y_train_text.size, possible_outputs);
+#   out_train = np.array(y_train_text);
+  
+#   for i in range(y_train_text.size):
+#     y_train[i][out_train[i] - 1] = 1;
+  
+#   y_test = generate_empty_matrix(y_test_text.size, possible_outputs);
+#   out_test = np.array(y_test_text);
+
+#   for i in range(y_test_text.size):
+#     y_test[i][out_test[i] - 1] = 1;
 
 def sigmoid(u):
   beta = 0.5;
