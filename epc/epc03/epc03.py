@@ -171,6 +171,9 @@ def multiply_matrix(a, b):
 
 hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, possible_outputs);
 
+print('Pesos iniciais da camada escondida:\n', hidden_layer);
+print('\nPesos iniciais da camada de saída:\n', output_layer);
+
 x = np.array(x_train);
 
 eta = 0.1;
@@ -224,6 +227,8 @@ while (abs(eqm_current - eqm_prev) > error):
       for k in range(output_layer.shape[0]):
         delta_hidden[i][j] = dsigmoid_du(gu[i][j]) * delta_output[i][k] * output_layer[k,j];
   
+    hidden_layer = hidden_layer + eta * multiply_matrix(delta_hidden[i], x[i]);
+
   epochs = epochs + 1;
 
   # Cálculo do eqm da época
@@ -231,18 +236,60 @@ while (abs(eqm_current - eqm_prev) > error):
   for i in range(y_train.shape[0]):
     for j in range(y_train.shape[1]):
       error_output += np.power((y_train[i][j] - gy[i][j]), 2);
-  error_output = error_output / y_train.size;
+  error_output = 0.5 * (error_output / y_train.shape[0]);
   
   eqm_current = error_output;
   
   errors[epochs] = eqm_current;
+print('\nÉpocas de treinamento:', epochs);
 
-print('Épocas de treinamento:', epochs);
+print('\nPesos finais da camada escondida:\n', hidden_layer);
+print('\nPesos finais da camada de saída:\n', output_layer);
 
-delta_output.shape
+# Função para tratar saída
 
-delta_hidden.shape
+def pp(y):
+  for i in range(y.shape[0]):
+    for j in range(y.shape[1]):
+      if y[i][j] >= 0.5:
+        y[i][j] = 1;
+      else:
+        y[i][j] = 0;
+  return y;
 
-hidden_layer.shape
+# Teste
+x = np.array(x_test);
 
-output_layer.shape
+u = generate_empty_matrix(int(x_test.size / x_test.columns.size), hidden_layer.shape[1]);
+u[:, (hidden_layer.shape[1] - 1)] = -1;
+
+gu = generate_empty_matrix(int(x_test.size / x_test.columns.size), hidden_layer.shape[1]);
+
+y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
+gy = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
+
+for i in range(int(x_test.size / x_test.columns.size)):
+  # Cálculo da saída da camada escondida
+  for j in range(hidden_layer.shape[0]):
+    u[i][j] = x[i] @ hidden_layer[j];
+  gu = sigmoid(u);
+  gu[:, (hidden_layer.shape[1] - 1)] = -1;
+  
+  # Cálculo da saída da rede
+  for j in range(output_layer.shape[0]):
+    y[i][j] = gu[i] @ output_layer[j];
+  gy = sigmoid(y);
+
+print(pp(gy));
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots();
+plt.xlim(-50, epochs + 1);
+
+ax.plot(errors[1:epochs + 1]);
+ax.set(xlabel='Nº de Épocas',
+       ylabel='EQM',
+       title='EQM ao longo das épocas de treinamento');
+ax.grid();
