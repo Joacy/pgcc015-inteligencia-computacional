@@ -169,12 +169,12 @@ def multiply_matrix(a, b):
       
   return result;
 
-hidden_layer, output_layer = generate_layers(x_train.columns.size - 1, x_train.columns.size - 1, possible_outputs);
+x = np.array(x_train);
+
+hidden_layer, output_layer = generate_layers(x.shape[1] - 1, x.shape[1] - 1, possible_outputs);
 
 print('Pesos iniciais da camada escondida:\n', hidden_layer);
 print('\nPesos iniciais da camada de saída:\n', output_layer);
-
-x = np.array(x_train);
 
 eta = 0.1;
 error = 1e-06;
@@ -188,10 +188,10 @@ errors = np.zeros(4000);
 while (abs(eqm_current - eqm_prev) > error):
   eqm_prev = eqm_current;
 
-  u = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
+  u = generate_empty_matrix(x_train.shape[0], hidden_layer.shape[1]);
   u[:, (hidden_layer.shape[1] - 1)] = -1;
 
-  gu = generate_empty_matrix(int(x_train.size / x_train.columns.size), hidden_layer.shape[1]);
+  gu = generate_empty_matrix(x_train.shape[0], hidden_layer.shape[1]);
 
   y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
   gy = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
@@ -202,31 +202,34 @@ while (abs(eqm_current - eqm_prev) > error):
   error_output = generate_empty_matrix(y.shape[0], y.shape[1]);
   
   # Fase de forward
-  for i in range(int(x_train.size / x_train.columns.size)):
+  for i in range(x_train.shape[0]):
     # Cálculo da saída da camada escondida
     for j in range(hidden_layer.shape[0]):
-      u[i][j] = x[i] @ hidden_layer[j];
+      for k in range(hidden_layer.shape[1]):
+        u[i][j] += x[i][j] * hidden_layer[j][k];
     gu = sigmoid(u);
     gu[:, (hidden_layer.shape[1] - 1)] = -1;
     
     # Cálculo da saída da rede
     for j in range(output_layer.shape[0]):
-      y[i][j] = gu[i] @ output_layer[j];
-    gy = sigmoid(y)
+      for k in range(output_layer.shape[1]):
+        y[i][j] += gu[i][j] * output_layer[j][k];
+    gy = sigmoid(y);
 
   # Fase de Backward
-  for i in range(int(x_train.size / x_train.columns.size)):
+  for i in range(x_train.shape[0]):
     for j in range(output_layer.shape[0]):
       delta_output[i][j] = (y_train[i][j] - gy[i][j]) * dsigmoid_du(gy[i][j]);
-    
-    aux = multiply_matrix(delta_output[i], dsigmoid_du(gu[i]));
     
     output_layer = output_layer + eta * multiply_matrix(delta_output[i], dsigmoid_du(gu[i]));
 
     for j in range(hidden_layer.shape[0]):
       for k in range(output_layer.shape[0]):
-        delta_hidden[i][j] = dsigmoid_du(gu[i][j]) * delta_output[i][k] * output_layer[k,j];
-  
+         aux2 = multiply_matrix(delta_output[i], output_layer[k]);
+      
+      for k in range(output_layer.shape[0]):
+         delta_hidden[i][j] = (-1) * dsigmoid_du(gu[i][j]) * aux2[k][j];
+             
     hidden_layer = hidden_layer + eta * multiply_matrix(delta_hidden[i], x[i]);
 
   epochs = epochs + 1;
@@ -235,11 +238,14 @@ while (abs(eqm_current - eqm_prev) > error):
   error_output = 0;
   for i in range(y_train.shape[0]):
     for j in range(y_train.shape[1]):
-      error_output += np.power((y_train[i][j] - gy[i][j]), 2);
+      error_output = error_output + np.power((y_train[i][j] - gy[i][j]), 2);
   error_output = 0.5 * (error_output / y_train.shape[0]);
   
   eqm_current = error_output;
   
+  if epochs > 3999:
+    break;
+
   errors[epochs] = eqm_current;
 print('\nÉpocas de treinamento:', epochs);
 
@@ -260,24 +266,26 @@ def pp(y):
 # Teste
 x = np.array(x_test);
 
-u = generate_empty_matrix(int(x_test.size / x_test.columns.size), hidden_layer.shape[1]);
+u = generate_empty_matrix(x_test.shape[0], hidden_layer.shape[1]);
 u[:, (hidden_layer.shape[1] - 1)] = -1;
 
-gu = generate_empty_matrix(int(x_test.size / x_test.columns.size), hidden_layer.shape[1]);
+gu = generate_empty_matrix(x_test.shape[0], hidden_layer.shape[1]);
 
 y = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
 gy = generate_empty_matrix(u.shape[0], output_layer.shape[0]);
 
-for i in range(int(x_test.size / x_test.columns.size)):
+for i in range(x_test.shape[0]):
   # Cálculo da saída da camada escondida
   for j in range(hidden_layer.shape[0]):
-    u[i][j] = x[i] @ hidden_layer[j];
+    for k in range(hidden_layer.shape[1]):
+      u[i][j] += x[i][j] * hidden_layer[j][k];
   gu = sigmoid(u);
   gu[:, (hidden_layer.shape[1] - 1)] = -1;
   
   # Cálculo da saída da rede
   for j in range(output_layer.shape[0]):
-    y[i][j] = gu[i] @ output_layer[j];
+    for k in range(output_layer.shape[1]):
+      y[i][j] += gu[i][j] * output_layer[j][k];
   gy = sigmoid(y);
 
 print(pp(gy));
@@ -286,7 +294,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots();
-plt.xlim(-50, epochs + 1);
+plt.xlim(0, epochs + 1);
 
 ax.plot(errors[1:epochs + 1]);
 ax.set(xlabel='Nº de Épocas',
