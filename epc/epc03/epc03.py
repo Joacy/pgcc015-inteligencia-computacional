@@ -79,7 +79,7 @@ def dsigmoid_du(u):
   beta = 0.5;
   return (beta * sigmoid(u) * (1 - sigmoid(u)));
 
-def train(x_train, y_train, hidden_size, output_size):
+def train(x_train, y_train, hidden_size, output_size, momentun):
   hidden_layer, output_layer = generate_layers(x_train.shape[1] - 1, hidden_size, output_size);
 
   print('Pesos iniciais da camada escondida:\n', hidden_layer);
@@ -125,19 +125,26 @@ def train(x_train, y_train, hidden_size, output_size):
           io[i][j] += yh[i][k] * output_layer[j][k];
       yo = sigmoid(io);
 
+    if i == 0:
+      output_layer_prev = generate_empty_matrix(output_layer.shape[0], output_layer.shape[1]);
+      hidden_layer_prev = generate_empty_matrix(hidden_layer.shape[0], hidden_layer.shape[1]);
+    else:
+      output_layer_prev = output_layer;
+      hidden_layer_prev = hidden_layer;
+
     # Fase de Backward
     for i in range(x_train.shape[0]): # percorre todas as entradas de teste
       for j in range(output_layer.shape[0]): # percorre todas as linhas da camada de saída
         delta_output[i][j] = (y_train[i][j] - yo[i][j]) * dsigmoid_du(io[i][j]);
       
-      output_layer = output_layer + eta * multiply_matrix(delta_output[i], yh[i]);
+      output_layer = output_layer + (momentun * (output_layer - output_layer_prev)) + (eta * multiply_matrix(delta_output[i], yh[i]));
 
       for j in range(hidden_layer.shape[0]): # percorre todas as linhas da camada escondida
         for k in range(output_layer.shape[0]): # percorre todas as linhas da camada de saída
           aux2 = multiply_matrix(delta_output[i], output_layer[k]);
           delta_hidden[i][j] = aux2[k][j] * dsigmoid_du(yh[i][j]);
 
-      hidden_layer = hidden_layer + eta * multiply_matrix(delta_hidden[i], x_train[i]);
+      hidden_layer = hidden_layer + (momentun * (hidden_layer - hidden_layer_prev)) + (eta * multiply_matrix(delta_hidden[i], x_train[i]));
 
     epochs = epochs + 1;
 
@@ -184,9 +191,9 @@ def calc_accuracy(y_calculated, y_expected):
 
   return (correct / size);
 
-# Validação
-def val(x_val, y_val, hidden_layer, output_layer):
-  ih = generate_empty_matrix(x_val.shape[0], hidden_layer.shape[0]);
+# Função para retornar acurácia do modelo, Validação ou Teste
+def predict(x, y, hidden_layer, output_layer):
+  ih = generate_empty_matrix(x.shape[0], hidden_layer.shape[0]);
   ih = add_bias(ih);
   
   yh = generate_empty_matrix(ih.shape[0], ih.shape[1]);
@@ -194,11 +201,11 @@ def val(x_val, y_val, hidden_layer, output_layer):
   io = generate_empty_matrix(yh.shape[0], output_layer.shape[0]);
   yo = generate_empty_matrix(io.shape[0], io.shape[1]);
   
-  for i in range(x_val.shape[0]):
+  for i in range(x.shape[0]):
     # Cálculo da saída da camada escondida
     for j in range(hidden_layer.shape[0]):
       for k in range(hidden_layer.shape[1]):
-        ih[i][j] += x_val[i][k] * hidden_layer[j][k];
+        ih[i][j] += x[i][k] * hidden_layer[j][k];
       yh = sigmoid(ih);
       yh[:, (0)] = -1;
     
@@ -210,37 +217,7 @@ def val(x_val, y_val, hidden_layer, output_layer):
   
   yo = pp(yo);
   
-  accuracy = calc_accuracy(yo, y_val);
-  
-  return accuracy;
-
-# Teste
-def test(x_test, y_test, hidden_layer, output_layer):
-  ih = generate_empty_matrix(x_test.shape[0], hidden_layer.shape[0]);
-  ih = add_bias(ih);
-  
-  yh = generate_empty_matrix(ih.shape[0], ih.shape[1]);
-  
-  io = generate_empty_matrix(yh.shape[0], output_layer.shape[0]);
-  yo = generate_empty_matrix(io.shape[0], io.shape[1]);
-  
-  for i in range(x_test.shape[0]):
-    # Cálculo da saída da camada escondida
-    for j in range(hidden_layer.shape[0]):
-      for k in range(hidden_layer.shape[1]):
-        ih[i][j] += x_test[i][k] * hidden_layer[j][k];
-      yh = sigmoid(ih);
-      yh[:, (0)] = -1;
-    
-    # Cálculo da saída da rede
-    for j in range(output_layer.shape[0]):
-      for k in range(output_layer.shape[1]):
-        io[i][j] += yh[i][k] * output_layer[j][k];
-      yo = sigmoid(io);
-  
-  yo = pp(yo);
-  
-  accuracy = calc_accuracy(yo, y_test);
+  accuracy = calc_accuracy(yo, y);
   
   return accuracy;
 
@@ -307,7 +284,7 @@ while exec < 3:
     x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.11, random_state=0)
 
     start = time.time(); # Início do treinamento
-    epochs, eqm, errors, hidden_layer, output_layer = train(x_train, y_train, 4, 3);
+    epochs, eqm, errors, hidden_layer, output_layer = train(x_train, y_train, 4, 3, 0.0);
     end = time.time(); # Fim do treinamento
 
     print('\nÉpocas: ', epochs, '\n');
@@ -315,10 +292,10 @@ while exec < 3:
     print('Pesos Finais da Camada Escondida:\n', hidden_layer, '\n');
     print('Pesos Finais da Camada de Saída:\n', output_layer, '\n');
 
-    val_accuracy = val(x_val, y_val, hidden_layer, output_layer) * 100;
+    val_accuracy = predict(x_val, y_val, hidden_layer, output_layer) * 100;
     print('Precisão de Validação:', val_accuracy, '\n');
 
-    test_accuracy = test(x_test, y_test, hidden_layer, output_layer) * 100;
+    test_accuracy = predict(x_test, y_test, hidden_layer, output_layer) * 100;
     print('Precisão de Teste:', test_accuracy, '\n');
 
     exec_eqms.append(eqm);
@@ -344,11 +321,22 @@ dev_val_accuracy = np.std(exec_val_accuracy);
 mean_test_accuracy = np.mean(exec_test_accuracy);
 dev_test_accuracy = np.std(exec_test_accuracy);
 
-print('EQM -> Média: ', mean_eqms, 'Desvio Padrão: ', dev_eqms, '\n');
-print('Épocas -> Média: ', mean_epochs, 'Desvio Padrão: ', dev_epochs, '\n');
-print('Tempo de Execução -> Média: ', mean_time, 'Desvio Padrão: ', dev_time, '\n');
-print('Acurácia de Validação -> Média: ', mean_val_accuracy, 'Desvio Padrão: ', dev_val_accuracy, '\n');
-print('Acurácia de Teste -> Média: ', mean_test_accuracy, 'Desvio Padrão: ', dev_test_accuracy);
+print('EQM -> Média: ', round(mean_eqms, 3), 'Desvio Padrão: ', round(dev_eqms, 3), '\n');
+print('Épocas -> Média: ', round(mean_epochs, 3), 'Desvio Padrão: ', round(dev_epochs, 3), '\n');
+print('Tempo de Execução -> Média: ', round(mean_time, 3), 'Desvio Padrão: ', round(dev_time, 3), '\n');
+print('Acurácia de Validação -> Média: ', round(mean_val_accuracy, 3), 'Desvio Padrão: ', round(dev_val_accuracy, 3), '\n');
+print('Acurácia de Teste -> Média: ', round(mean_test_accuracy, 3), 'Desvio Padrão: ', round(dev_test_accuracy, 3));
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots();
+
+ax.plot(errors[1:epochs + 1]);
+ax.set(xlabel='Nº de Épocas',
+       ylabel='EQM',
+       title='EQM ao longo das épocas de treinamento');
+ax.grid();
 
 exec = 0;
 while exec < 3:
@@ -511,7 +499,7 @@ while exec < 3:
     x_train2, x_val2, y_train2, y_val2 = train_test_split(x_train2, y_train2, test_size=0.11, random_state=0)
 
     start = time.time(); # Início do treinamento
-    epochs, eqm, errors, hidden_layer, output_layer = train(x_train2, y_train2, 11, 4);
+    epochs, eqm, errors, hidden_layer, output_layer = train(x_train2, y_train2, 11, 4, 0);
     end = time.time(); # Fim do treinamento
 
     print('\nÉpocas: ', epochs, '\n');
@@ -519,10 +507,10 @@ while exec < 3:
     print('Pesos Finais da Camada Escondida:\n', hidden_layer, '\n');
     print('Pesos Finais da Camada de Saída:\n', output_layer, '\n');
 
-    val_accuracy = val(x_val2, y_val2, hidden_layer, output_layer) * 100;
+    val_accuracy = predict(x_val2, y_val2, hidden_layer, output_layer) * 100;
     print('Precisão de Validação:', val_accuracy, '\n');
 
-    test_accuracy = test(x_test2, y_test2, hidden_layer, output_layer) * 100;
+    test_accuracy = predict(x_test2, y_test2, hidden_layer, output_layer) * 100;
     print('Precisão de Teste:', test_accuracy, '\n');
 
     exec_eqms2.append(eqm);
@@ -548,17 +536,16 @@ dev_val_accuracy2 = np.std(exec_val_accuracy2);
 mean_test_accuracy2 = np.mean(exec_test_accuracy2);
 dev_test_accuracy2 = np.std(exec_test_accuracy2);
 
-print('EQM -> Média: ', mean_eqms2, 'Desvio Padrão: ', dev_eqms2, '\n');
-print('Épocas -> Média: ', mean_epochs2, 'Desvio Padrão: ', dev_epochs2, '\n');
-print('Tempo de Execução -> Média: ', mean_time2, 'Desvio Padrão: ', dev_time2, '\n');
-print('Acurácia de Validação -> Média: ', mean_val_accuracy2, 'Desvio Padrão: ', dev_val_accuracy2, '\n');
-print('Acurácia de Teste -> Média: ', mean_test_accuracy2, 'Desvio Padrão: ', dev_test_accuracy2);
+print('EQM -> Média: ', round(mean_eqms2, 3), 'Desvio Padrão: ', round(dev_eqms2, 3), '\n');
+print('Épocas -> Média: ', round(mean_epochs2, 3), 'Desvio Padrão: ', round(dev_epochs2, 3), '\n');
+print('Tempo de Execução -> Média: ', round(mean_time2, 3), 'Desvio Padrão: ', round(dev_time2, 3), '\n');
+print('Acurácia de Validação -> Média: ', round(mean_val_accuracy2, 3), 'Desvio Padrão: ', round(dev_val_accuracy2, 3), '\n');
+print('Acurácia de Teste -> Média: ', round(mean_test_accuracy2, 3), 'Desvio Padrão: ', round(dev_test_accuracy2, 3));
 
 import matplotlib
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots();
-plt.xlim(0, epochs + 1);
 
 ax.plot(errors[1:epochs + 1]);
 ax.set(xlabel='Nº de Épocas',
