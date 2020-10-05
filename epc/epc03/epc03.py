@@ -22,9 +22,6 @@ from sklearn.model_selection import train_test_split
 # Importando constante de tempo
 import time
 
-# Importando statistics
-import statistics
-
 def generate_empty_matrix(rows, cols):
   matrix = [];
   for i in range(rows):
@@ -247,7 +244,8 @@ def test(x_test, y_test, hidden_layer, output_layer):
   
   return accuracy;
 
-for exec in range(3):
+exec = 0;
+while exec < 3:
   exec_eqms = generate_empty_matrix(10, 3);
   exec_epochs = generate_empty_matrix(10, 3);
   exec_time = generate_empty_matrix(10, 3);
@@ -329,20 +327,22 @@ for exec in range(3):
     exec_val_accuracy[i][exec] = val_accuracy;
     exec_test_accuracy[i][exec] = test_accuracy;
 
-mean_eqms = mean(exec_eqms);
-dev_eqms = stdev(exec_eqms);
+  exec = exec + 1;
 
-mean_epochs = mean(exec_epochs);
-dev_epochs = stdev(exec_epochs);
+mean_eqms = np.mean(exec_eqms);
+dev_eqms = np.std(exec_eqms);
 
-mean_time = mean(exec_time);
-dev_time = stdev(exec_time);
+mean_epochs = np.mean(exec_epochs);
+dev_epochs = np.std(exec_epochs);
 
-mean_val_accuracy = mean(exec_val_accuracy);
-dev_val_accuracy = stdev(exec_val_accuracy);
+mean_time = np.mean(exec_time);
+dev_time = np.std(exec_time);
 
-mean_test_accuracy = mean(exec_test_accuracy);
-dev_test_accuracy = stdev(exec_test_accuracy);
+mean_val_accuracy = np.mean(exec_val_accuracy);
+dev_val_accuracy = np.std(exec_val_accuracy);
+
+mean_test_accuracy = np.mean(exec_test_accuracy);
+dev_test_accuracy = np.std(exec_test_accuracy);
 
 print('EQM -> Média: ', mean_eqms, 'Desvio Padrão: ', dev_eqms, '\n');
 print('Épocas -> Média: ', mean_epochs, 'Desvio Padrão: ', dev_epochs, '\n');
@@ -350,7 +350,8 @@ print('Tempo de Execução -> Média: ', mean_time, 'Desvio Padrão: ', dev_time
 print('Acurácia de Validação -> Média: ', mean_val_accuracy, 'Desvio Padrão: ', dev_val_accuracy, '\n');
 print('Acurácia de Teste -> Média: ', mean_test_accuracy, 'Desvio Padrão: ', dev_test_accuracy);
 
-for exec in range(3):
+exec = 0;
+while exec < 3:
   exec_eqms2 = generate_empty_matrix(10, 3);
   exec_epochs2 = generate_empty_matrix(10, 3);
   exec_time2 = generate_empty_matrix(10, 3);
@@ -530,20 +531,22 @@ for exec in range(3):
     exec_val_accuracy2[i][exec] = val_accuracy;
     exec_test_accuracy2[i][exec] = test_accuracy;
 
-mean_eqms2 = mean(exec_eqms2);
-dev_eqms2 = stdev(exec_eqms2);
+  exec = exec + 1;
 
-mean_epochs2 = mean(exec_epochs2);
-dev_epochs2 = stdev(exec_epochs2);
+mean_eqms2 = np.mean(exec_eqms2);
+dev_eqms2 = np.std(exec_eqms2);
 
-mean_time2 = mean(exec_time2);
-dev_time2 = stdev(exec_time2);
+mean_epochs2 = np.mean(exec_epochs2);
+dev_epochs2 = np.std(exec_epochs2);
 
-mean_val_accuracy2 = mean(exec_val_accuracy2);
-dev_val_accuracy2 = stdev(exec_val_accuracy2);
+mean_time2 = np.mean(exec_time2);
+dev_time2 = np.std(exec_time2);
 
-mean_test_accuracy2 = mean(exec_test_accuracy2);
-dev_test_accuracy2 = stdev(exec_test_accuracy2);
+mean_val_accuracy2 = np.mean(exec_val_accuracy2);
+dev_val_accuracy2 = np.std(exec_val_accuracy2);
+
+mean_test_accuracy2 = np.mean(exec_test_accuracy2);
+dev_test_accuracy2 = np.std(exec_test_accuracy2);
 
 print('EQM -> Média: ', mean_eqms2, 'Desvio Padrão: ', dev_eqms2, '\n');
 print('Épocas -> Média: ', mean_epochs2, 'Desvio Padrão: ', dev_epochs2, '\n');
