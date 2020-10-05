@@ -246,11 +246,11 @@ def test(x_test, y_test, hidden_layer, output_layer):
 
 exec = 0;
 while exec < 3:
-  exec_eqms = generate_empty_matrix(10, 3);
-  exec_epochs = generate_empty_matrix(10, 3);
-  exec_time = generate_empty_matrix(10, 3);
-  exec_val_accuracy = generate_empty_matrix(10, 3);
-  exec_test_accuracy = generate_empty_matrix(10, 3);
+  exec_eqms = [];
+  exec_epochs = [];
+  exec_time = [];
+  exec_val_accuracy = [];
+  exec_test_accuracy = [];
 
   # Importando dados de treinamento e dados de teste para Iris plants data set
   for i in range(10):
@@ -321,12 +321,12 @@ while exec < 3:
     test_accuracy = test(x_test, y_test, hidden_layer, output_layer) * 100;
     print('Precisão de Teste:', test_accuracy, '\n');
 
-    exec_eqms[i][exec] = eqm;
-    exec_epochs[i][exec] = epochs;
-    exec_time[i][exec] = end - start;
-    exec_val_accuracy[i][exec] = val_accuracy;
-    exec_test_accuracy[i][exec] = test_accuracy;
-
+    exec_eqms.append(eqm);
+    exec_epochs.append(epochs);
+    exec_time.append(end - start);
+    exec_val_accuracy.append(val_accuracy);
+    exec_test_accuracy.append(test_accuracy);
+  
   exec = exec + 1;
 
 mean_eqms = np.mean(exec_eqms);
@@ -352,11 +352,11 @@ print('Acurácia de Teste -> Média: ', mean_test_accuracy, 'Desvio Padrão: ', 
 
 exec = 0;
 while exec < 3:
-  exec_eqms2 = generate_empty_matrix(10, 3);
-  exec_epochs2 = generate_empty_matrix(10, 3);
-  exec_time2 = generate_empty_matrix(10, 3);
-  exec_val_accuracy2 = generate_empty_matrix(10, 3);
-  exec_test_accuracy2 = generate_empty_matrix(10, 3);
+  exec_eqms2 = [];
+  exec_epochs2 = [];
+  exec_time2 = [];
+  exec_val_accuracy2 = [];
+  exec_test_accuracy2 = [];
 
   # Importando dados de treinamento e dados de teste para White Wine Quality data set
   for i in range(10):
@@ -524,12 +524,12 @@ while exec < 3:
 
     test_accuracy = test(x_test2, y_test2, hidden_layer, output_layer) * 100;
     print('Precisão de Teste:', test_accuracy, '\n');
-    
-    exec_eqms2[i][exec] = eqm;
-    exec_epochs2[i][exec] = epochs;
-    exec_time2[i][exec] = end - start;
-    exec_val_accuracy2[i][exec] = val_accuracy;
-    exec_test_accuracy2[i][exec] = test_accuracy;
+
+    exec_eqms2.append(eqm);
+    exec_epochs2.append(epochs);
+    exec_time2.append(end - start);
+    exec_val_accuracy2.append(val_accuracy);
+    exec_test_accuracy2.append(test_accuracy);
 
   exec = exec + 1;
 
