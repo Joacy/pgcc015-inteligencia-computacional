@@ -23,22 +23,65 @@ def generate_empty_matrix(rows, cols):
     for j in range(cols):
       line.append(np.zeros(1)[0]);
     matrix.append(line);
-  return np.array(matrix);
+  return matrix;
 
-def add_bias(array):
-  rows = array.shape[0];
-  cols = array.shape[1];
-
+def generate_weights(rows, cols, inputs):
   matrix = [];
   for i in range(rows):
-    line = [];
-    for j in range(cols + 1):
-      if j == 0:
-        line.append((-1) * np.ones(1)[0]);
+    neuroniuns = [];
+    for j in range(cols):
+      weights = [];
+      for k in range(inputs):
+        weights.append(np.random.rand(1)[0]);
+      neuroniuns.append(weights);
+    matrix.append(neuroniuns);
+  return matrix;
+
+def generate_neighborhood(rows, cols):
+  neighborhood = [];
+  for i in range(rows):
+    for j in range(cols):
+      neighbors = [];
+      if (i > 0) and (i < rows - 1) and (j > 0) and (j < cols - 1):
+        neighbors.append({"x": i, "y": j + 1});
+        neighbors.append({"x": i + 1, "y": j});
+        neighbors.append({"x": i, "y": j - 1});
+        neighbors.append({"x": i - 1, "y": j});
       else:
-        line.append(array[i][j-1]);
-    matrix.append(line);
-  return np.array(matrix);
+        if (i == 0):
+          if (j == 0):
+            neighbors.append({"x": i, "y": j + 1});
+            neighbors.append({"x": i + 1, "y": j});
+          elif (j == (cols - 1)):
+            neighbors.append({"x": i, "y": j - 1});
+            neighbors.append({"x": i + 1, "y": j});
+          elif (j > 0) and (j < cols - 1):
+            neighbors.append({"x": i, "y": j - 1});
+            neighbors.append({"x": i, "y": j + 1});
+            neighbors.append({"x": i + 1, "y": j});
+        elif (i == rows - 1):
+          if (j == 0):
+            neighbors.append({"x": i - 1, "y": j});
+            neighbors.append({"x": i, "y": j + 1});
+          elif (j == (cols - 1)):
+            neighbors.append({"x": i - 1, "y": j});
+            neighbors.append({"x": i, "y": j - 1});
+          elif (j > 0) and (j < cols - 1):
+            neighbors.append({"x": i, "y": j - 1});
+            neighbors.append({"x": i, "y": j + 1});
+            neighbors.append({"x": i - 1, "y": j});
+        if (j == 0):
+          if (i > 0) and (i < cols - 1):
+            neighbors.append({"x": i - 1, "y": j});
+            neighbors.append({"x": i, "y": j + 1});
+            neighbors.append({"x": i + 1, "y": j});
+        elif (j == cols -1):
+          if (i > 0) and (i < cols - 1):
+            neighbors.append({"x": i - 1, "y": j});
+            neighbors.append({"x": i, "y": j - 1});
+            neighbors.append({"x": i + 1, "y": j});
+      neighborhood.append(neighbors);
+  return neighborhood;
 
 i = 0;
 
@@ -62,31 +105,64 @@ x_train = scaler.transform(x_train);
 # Normalizando dados do teste
 x_test = scaler.transform(x_test);
 
-# Adicionando o bias como uma entrada
-x_train = add_bias(x_train);
-x_test = add_bias(x_test);
+# Definindo mapa topológico
+map = np.array(generate_empty_matrix(50, 50));
 
-possible_outputs = 3;
+# Montar os conjuntos de vizinhança
+neighborhood = np.array(generate_neighborhood(map.shape[0], map.shape[1])).reshape(map.shape[0], map.shape[1]);
 
-# Codificando as saídas do treinamento e do teste
-y_train = generate_empty_matrix(y_train_text.size, possible_outputs);
-out_train = np.array(y_train_text);
+# Inicializar w aleatoriamente;
+weights = np.array(generate_weights(map.shape[0], map.shape[1], x_train.shape[1]));
 
-for j in range(y_train_text.size):
-  if out_train[j] == ' Iris-setosa':
-    y_train[j][0] = 1;
-  elif out_train[i] == ' Iris-versicolor':
-    y_train[j][1] = 1;
-  elif out_train[j] == ' Iris-virginica':
-    y_train[j][2] = 1;
+# Inicializar a taxa de aprendizado;
+eta = 0.001;
+
+# print(map,'\n');
+# print(weights,'\n');
+
+epochs = 0;
+
+min_x_prev = 999999;
+min_y_prev = 999999;
+min_x_current = 0;
+min_y_current = 0;
+
+while (min_x_prev != min_x_current) and (min_y_prev != min_y_current):
+  min_x_prev = min_x_current;
+  min_y_prev = min_y_current;
+  
+  print(min_x_current, min_y_current) 
+  
+  for i in range(x_train.shape[0]):
+    # Cálculo da distância euclidiana
+    for j in range(map.shape[0]):
+      for k in range(map.shape[1]):
+        for l in range(weights.shape[2]):
+          map[j][k] += np.power((x_train[i][l] - weights[j][k][l]), 2);
+    map = np.sqrt(map);
+
+    # Encontrando neurônio vencedor
+    min_x = 0
+    min_y = 0
+    min = 999999;
+    for j in range(map.shape[0]):
+      for k in range(map.shape[1]):
+        if(min > map[j][k]):
+          min_x = j;
+          min_y = k;
+          min = map[j][k];
+
+    # Atualização dos pesos do neurônio vencedor
+    weights[min_x][min_y] = weights[min_x][min_y] + eta * (x_train[i] - weights[min_x][min_y])
     
-y_test = generate_empty_matrix(y_test_text.size, possible_outputs);
-out_test = np.array(y_test_text);
+    # Atualização dos pesos dos vizinhos do neurônio vencedor
+    for neighbor in range(len(neighborhood[min_x][min_y])):
+      weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] = weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] + 0.5 * eta * (x_train[i] - weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']])
+  
+  min_x_current = min_x
+  min_y_current = min_y
+  epochs = epochs + 1
 
-for j in range(y_test_text.size):
-  if out_test[j] == ' Iris-setosa':
-    y_test[j][0] = 1;
-  elif out_test[j] == ' Iris-versicolor':
-    y_test[j][1] = 1;
-  elif out_test[i] == ' Iris-virginica':
-    y_test[j][2] = 1;
+print(map,'\n');
+print(epochs,'\n');
+# print(weights,'\n');
