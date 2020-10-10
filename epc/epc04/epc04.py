@@ -37,6 +37,8 @@ def generate_weights(rows, cols, inputs):
     matrix.append(neuroniuns);
   return matrix;
 
+"""Geração da Matriz de Vizinhança"""
+
 def generate_neighborhood(rows, cols):
   neighborhood = [];
   for i in range(rows):
@@ -83,6 +85,8 @@ def generate_neighborhood(rows, cols):
       neighborhood.append(neighbors);
   return neighborhood;
 
+"""Processamento dos dados"""
+
 i = 0;
 
 train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',');
@@ -105,64 +109,87 @@ x_train = scaler.transform(x_train);
 # Normalizando dados do teste
 x_test = scaler.transform(x_test);
 
-# Definindo mapa topológico
-map = np.array(generate_empty_matrix(50, 50));
+"""Algoritmo SOM"""
 
-# Montar os conjuntos de vizinhança
-neighborhood = np.array(generate_neighborhood(map.shape[0], map.shape[1])).reshape(map.shape[0], map.shape[1]);
+def som(map_rows, map_cols, training_data, learning_rate, iterations):
+  # Definindo mapa topológico
+  map = np.array(generate_empty_matrix(map_rows, map_cols));
 
-# Inicializar w aleatoriamente;
-weights = np.array(generate_weights(map.shape[0], map.shape[1], x_train.shape[1]));
+  # Montar os conjuntos de vizinhança
+  neighborhood = np.array(generate_neighborhood(map.shape[0], map.shape[1])).reshape(map.shape[0], map.shape[1]);
 
-# Inicializar a taxa de aprendizado;
-eta = 0.001;
+  # Inicializar w aleatoriamente;
+  weights = np.array(generate_weights(map.shape[0], map.shape[1], training_data.shape[1]));
 
-# print(map,'\n');
-# print(weights,'\n');
+  # Inicializar a taxa de aprendizado;
+  eta = learning_rate;
 
-epochs = 0;
+  epochs = 0;
 
-min_x_prev = 999999;
-min_y_prev = 999999;
-min_x_current = 0;
-min_y_current = 0;
+  min_x_prev = 999999;
+  min_y_prev = 999999;
+  min_x_current = 0;
+  min_y_current = 0;
 
-while (min_x_prev != min_x_current) and (min_y_prev != min_y_current):
-  min_x_prev = min_x_current;
-  min_y_prev = min_y_current;
-  
-  print(min_x_current, min_y_current) 
-  
-  for i in range(x_train.shape[0]):
-    # Cálculo da distância euclidiana
-    for j in range(map.shape[0]):
-      for k in range(map.shape[1]):
-        for l in range(weights.shape[2]):
-          map[j][k] += np.power((x_train[i][l] - weights[j][k][l]), 2);
-    map = np.sqrt(map);
-
-    # Encontrando neurônio vencedor
-    min_x = 0
-    min_y = 0
-    min = 999999;
-    for j in range(map.shape[0]):
-      for k in range(map.shape[1]):
-        if(min > map[j][k]):
-          min_x = j;
-          min_y = k;
-          min = map[j][k];
-
-    # Atualização dos pesos do neurônio vencedor
-    weights[min_x][min_y] = weights[min_x][min_y] + eta * (x_train[i] - weights[min_x][min_y])
+  # while (min_x_prev != min_x_current) and (min_y_prev != min_y_current):
+  for it in range(iterations):
+    min_x_prev = min_x_current;
+    min_y_prev = min_y_current;
     
-    # Atualização dos pesos dos vizinhos do neurônio vencedor
-    for neighbor in range(len(neighborhood[min_x][min_y])):
-      weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] = weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] + 0.5 * eta * (x_train[i] - weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']])
-  
-  min_x_current = min_x
-  min_y_current = min_y
-  epochs = epochs + 1
+    for i in range(training_data.shape[0]):
+      # Cálculo da distância euclidiana
+      for j in range(map.shape[0]):
+        for k in range(map.shape[1]):
+          for l in range(weights.shape[2]):
+            map[j][k] += np.power((training_data[i][l] - weights[j][k][l]), 2);
+      map = np.sqrt(map);
 
-print(map,'\n');
-print(epochs,'\n');
-# print(weights,'\n');
+      # Encontrando neurônio vencedor
+      min_x = 0
+      min_y = 0
+      min = 999999;
+      for j in range(map.shape[0]):
+        for k in range(map.shape[1]):
+          if(min > map[j][k]):
+            min_x = j;
+            min_y = k;
+            min = map[j][k];
+
+      # Atualização dos pesos do neurônio vencedor
+      weights[min_x][min_y] = weights[min_x][min_y] + eta * (training_data[i] - weights[min_x][min_y])
+      
+      # Atualização dos pesos dos vizinhos do neurônio vencedor
+      for neighbor in range(len(neighborhood[min_x][min_y])):
+        weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] = weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] + 0.5 * eta * (training_data[i] - weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']])
+    
+    min_x_current = min_x
+    min_y_current = min_y
+    epochs = epochs + 1
+
+  # print(map,'\n');
+  # print(epochs,'\n');
+  # print(weights,'\n');
+  return map, weights, min_x_current, min_y_current, epochs
+
+"""Topologia 1"""
+
+map1, weights1, x_min1, y_min1, epochs1 = som(5, 5, x_train, 0.001, 1000)
+
+from matplotlib import pyplot as plt
+
+plt.imshow(map1, interpolation='nearest')
+plt.show()
+
+"""Topologia 2"""
+
+map2, weights2, x_min2, y_min2, epochs2 = som(15, 15, x_train, 0.001, 1000)
+
+plt.imshow(map2, interpolation='nearest')
+plt.show()
+
+"""Topologia 3"""
+
+map3, weights3, x_min3, y_min3, epochs3 = som(30, 30, x_train, 0.001, 1000)
+
+plt.imshow(map3, interpolation='nearest')
+plt.show()
