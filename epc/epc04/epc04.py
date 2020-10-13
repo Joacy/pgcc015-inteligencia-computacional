@@ -16,6 +16,12 @@ import numpy as np
 # Importando `StandardScaler` de `sklearn.preprocessing`
 from sklearn.preprocessing import StandardScaler
 
+# Importando `pyplot` de `matplotlib`
+from matplotlib import pyplot as plt
+
+# Importando constante de tempo
+import time
+
 def generate_empty_matrix(rows, cols):
   matrix = [];
   for i in range(rows):
@@ -36,6 +42,16 @@ def generate_weights(rows, cols, inputs):
       neuroniuns.append(weights);
     matrix.append(neuroniuns);
   return matrix;
+
+def euclidian(weights):
+  dists = np.array(generate_empty_matrix(weights.shape[0], weights.shape[1]))
+
+  for j in range(weights.shape[0]):
+    for k in range(weights.shape[1]):
+      for l in range(weights.shape[2]):
+        dists[j][k] += np.power((0 - weights[j][k][l]), 2);
+  dists = np.sqrt(dists);
+  return dists
 
 """Geração da Matriz de Vizinhança"""
 
@@ -87,7 +103,7 @@ def generate_neighborhood(rows, cols):
 
 """Processamento dos dados"""
 
-i = 0;
+i = 9;
 
 train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',');
 test_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tst.txt', sep=',');
@@ -123,19 +139,15 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
 
   # Inicializar a taxa de aprendizado;
   eta = learning_rate;
+  
+  winners_current = []
+  winners_prev = [[999, 999, 999]]
 
   epochs = 0;
 
-  min_x_prev = 999999;
-  min_y_prev = 999999;
-  min_x_current = 0;
-  min_y_current = 0;
+  while True and (epochs < iterations):
+    winners_prev = winners_current.copy();
 
-  # while (min_x_prev != min_x_current) and (min_y_prev != min_y_current):
-  for it in range(iterations):
-    min_x_prev = min_x_current;
-    min_y_prev = min_y_current;
-    
     for i in range(training_data.shape[0]):
       # Cálculo da distância euclidiana
       for j in range(map.shape[0]):
@@ -145,8 +157,8 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
       map = np.sqrt(map);
 
       # Encontrando neurônio vencedor
-      min_x = 0
-      min_y = 0
+      min_x = 0;
+      min_y = 0;
       min = 999999;
       for j in range(map.shape[0]):
         for k in range(map.shape[1]):
@@ -154,6 +166,11 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
             min_x = j;
             min_y = k;
             min = map[j][k];
+      
+      winner = []
+      winner.append(min_x)
+      winner.append(min_y)
+      winners_current.append(winner)
 
       # Atualização dos pesos do neurônio vencedor
       weights[min_x][min_y] = weights[min_x][min_y] + eta * (training_data[i] - weights[min_x][min_y])
@@ -161,35 +178,80 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
       # Atualização dos pesos dos vizinhos do neurônio vencedor
       for neighbor in range(len(neighborhood[min_x][min_y])):
         weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] = weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']] + 0.5 * eta * (training_data[i] - weights[neighborhood[min_x][min_y][neighbor]['x']][neighborhood[min_x][min_y][neighbor]['y']])
-    
+
     min_x_current = min_x
     min_y_current = min_y
     epochs = epochs + 1
+    
+    if (winners_current == winners_prev):
+      break 
 
-  # print(map,'\n');
-  # print(epochs,'\n');
-  # print(weights,'\n');
   return map, weights, min_x_current, min_y_current, epochs
 
 """Topologia 1"""
 
-map1, weights1, x_min1, y_min1, epochs1 = som(5, 5, x_train, 0.001, 1000)
-
-from matplotlib import pyplot as plt
+start = time.time()
+map1, weights1, x_min1, y_min1, epochs1 = som(5, 5, x_train, 0.001, 7000)
+end = time.time()
+print(end - start, epochs1)
 
 plt.imshow(map1, interpolation='nearest')
 plt.show()
 
+# plt.imshow(euclidian(weights1), interpolation='nearest')
+plt.imshow(weights1, interpolation='nearest')
+plt.show()
+
+print(euclidian(weights1))
+
 """Topologia 2"""
 
-map2, weights2, x_min2, y_min2, epochs2 = som(15, 15, x_train, 0.001, 1000)
+start = time.time()
+map2, weights2, x_min2, y_min2, epochs2 = som(15, 15, x_train, 0.001, 7000)
+end = time.time()
+print(end - start, epochs2)
 
 plt.imshow(map2, interpolation='nearest')
 plt.show()
 
+# plt.imshow(euclidian(weights2), interpolation='nearest')
+plt.imshow(weights2, interpolation='nearest')
+plt.show()
+
+print(euclidian(weights2))
+
 """Topologia 3"""
 
-map3, weights3, x_min3, y_min3, epochs3 = som(30, 30, x_train, 0.001, 1000)
+start = time.time()
+map3, weights3, x_min3, y_min3, epochs3 = som(30, 30, x_train, 0.001, 7000)
+end = time.time()
+print(end - start, epochs3)
 
 plt.imshow(map3, interpolation='nearest')
+plt.show()
+
+# plt.imshow(euclidian(weights3), interpolation='nearest')
+plt.imshow(weights3, interpolation='nearest')
+plt.show()
+
+print(euclidian(weights3))
+
+from sklearn.cluster import KMeans
+
+a = []
+for j in range(weights3.shape[0]):
+  for k in range(weights3.shape[1]):
+    a.append(weights3[j][k])
+
+kmeans = KMeans(n_clusters = 3, init = 'random').fit(a)
+
+kmeans.labels_
+
+kmeans.cluster_centers_
+
+kmeans.predict(x_test)
+
+plt.scatter(weights3.T[0], weights3.T[1], color='g')
+plt.scatter(x_test.T[0], x_test.T[1], color='r')
+plt.scatter(kmeans.cluster_centers_.T[0], kmeans.cluster_centers_.T[1], edgecolors='r', color='b')
 plt.show()
