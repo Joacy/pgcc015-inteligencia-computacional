@@ -13,8 +13,8 @@ import pandas as pd
 # Importando numpy
 import numpy as np
 
-# Importando `StandardScaler` de `sklearn.preprocessing`
-from sklearn.preprocessing import StandardScaler
+# Importando `MinMaxScaler` de `sklearn.preprocessing`
+from sklearn.preprocessing import MinMaxScaler
 
 # Importando `train_test_split` de `sklearn.model`
 from sklearn.model_selection import train_test_split
@@ -243,7 +243,7 @@ while exec < 3:
     y_test_text = test_data.iloc[:,4:5];
 
     # Normalização dos dados
-    scaler = StandardScaler().fit(x_train);
+    scaler = MinMaxScaler().fit(x_train);
 
     # Normalizando dados do treinamento
     x_train = scaler.transform(x_train);
@@ -360,7 +360,7 @@ while exec < 3:
     y_test_text2 = test_data2.iloc[:,11:12];
     
     # Normalização dos dados
-    scaler2 = StandardScaler().fit(x_train2);
+    scaler2 = MinMaxScaler().fit(x_train2);
 
     # Normalizando dados do treinamento
     x_train2 = scaler2.transform(x_train2);
