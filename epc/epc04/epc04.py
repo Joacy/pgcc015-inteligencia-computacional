@@ -106,7 +106,7 @@ def generate_neighborhood(rows, cols):
 
 """Processamento dos dados"""
 
-i = 0;
+i = 9;
 
 train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',');
 test_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tst.txt', sep=',');
@@ -144,7 +144,7 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
   eta = learning_rate;
   
   winners_current = []
-  winners_prev = [[999, 999, 999]]
+  winners_prev = [[99999, 99999]]
 
   epochs = 0;
 
@@ -153,11 +153,6 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
 
     for i in range(training_data.shape[0]):
       # Cálculo da distância euclidiana
-      # for j in range(map.shape[0]):
-      #   for k in range(map.shape[1]):
-      #     for l in range(weights.shape[2]):
-      #       map[j][k] += np.power((training_data[i][l] - weights[j][k][l]), 2);
-      # map = np.sqrt(map);
       map = euclidian(training_data[i], weights);
       
       # Encontrando neurônio vencedor
@@ -187,10 +182,13 @@ def som(map_rows, map_cols, training_data, learning_rate, iterations):
     min_y_current = min_y
     epochs = epochs + 1
     
+    if (epochs % 5000) == 0:
+      print(epochs)
+
     if (winners_current == winners_prev):
       break 
 
-  return map, weights, min_x_current, min_y_current, epochs
+  return map, weights, neighborhood, epochs
 
 """Aplicação do Kmeans"""
 
@@ -212,14 +210,11 @@ def class_neuroniun(weights, clusters):
 """Classificação das entradas"""
 
 def predict_classes(x, weights, weights_classes, centroids):
-  # map = np.array(generate_empty_matrix(weights.shape[0], weights.shape[1]));
-
   class_0 = []
   class_1 = []
   class_2 = []
 
   predict = []
-  # predict_w = []
 
   for i in range(x.shape[0]):
     d0 = np.power((x[i] - centroids[0]), 2)
@@ -240,44 +235,34 @@ def predict_classes(x, weights, weights_classes, centroids):
       predict.append(2)
       class_2.append(i)
 
-    # map = euclidian(x[i], weights);
-    
-    # Encontrando neurônio vencedor
-    # min_x = 0;
-    # min_y = 0;
-    # min = 999999;
-    # for j in range(map.shape[0]):
-    #   for k in range(map.shape[1]):
-    #     if(min > map[j][k]):
-    #       min_x = j;
-    #       min_y = k;
-    #       min = map[j][k];
-
-    # predict_w.append(weights_classes[min_x][min_y])
-      
-    # if weights_classes[min_x][min_y] == 0:
-    #   class_0.append((i, weights_classes[min_x][min_y]))
-    # elif weights_classes[min_x][min_y] == 1:
-    #   class_1.append((i, weights_classes[min_x][min_y]))
-    # elif weights_classes[min_x][min_y] == 2:
-    #   class_2.append((i, weights_classes[min_x][min_y]))
-  
-  # print(predict_w)
-
   return predict, class_0, class_1, class_2
 
 """Topologia 1"""
 
 start = time.time()
-map1, weights1, x_min1, y_min1, epochs1 = som(5, 5, x_train, 0.001, 20000)
+map1, weights1, neighborhood1, epochs1 = som(5, 5, x_train, 0.001, 50000)
 end = time.time()
-
 print(end - start, epochs1)
 
 plt.imshow(map1, interpolation='nearest')
 plt.show()
 
 plt.imshow(weights1, interpolation='nearest')
+plt.show()
+
+plt.imshow(weights1, interpolation='sinc')
+plt.show()
+
+matrixU1 = np.array(generate_empty_matrix(map1.shape[0], map1.shape[1]))
+
+for i in range(weights1.shape[0]):
+  for j in range(weights1.shape[1]):
+    for neighbor in range(len(neighborhood1[i][j])):
+      matrixU1[i][j] += np.sqrt(sum(np.power((weights1[i][j] - weights1[neighborhood1[i][j][neighbor]['x']][neighborhood1[i][j][neighbor]['y']]), 2)))
+    matrixU1[i][j] = matrixU1[i][j] / len(neighborhood1[i][j])
+
+plt.imshow(matrixU1, cmap='gray', interpolation='sinc')
+plt.title('Matriz U, Topologia 5x5')
 plt.show()
 
 weights1_classes, centroids1 = class_neuroniun(weights1, 3)
@@ -298,7 +283,7 @@ plt.show()
 """Topologia 2"""
 
 start = time.time()
-map2, weights2, x_min2, y_min2, epochs2 = som(15, 15, x_train, 0.001, 15000)
+map2, weights2, neighborhood2, epochs2 = som(8, 8, x_train, 0.001, 50000)
 end = time.time()
 print(end - start, epochs2)
 
@@ -308,9 +293,27 @@ plt.show()
 plt.imshow(weights2, interpolation='nearest')
 plt.show()
 
+matrixU2 = np.array(generate_empty_matrix(map2.shape[0], map2.shape[1]))
+
+for i in range(weights2.shape[0]):
+  for j in range(weights2.shape[1]):
+    for neighbor in range(len(neighborhood2[i][j])):
+      matrixU2[i][j] += np.sqrt(sum(np.power((weights2[i][j] - weights2[neighborhood2[i][j][neighbor]['x']][neighborhood2[i][j][neighbor]['y']]), 2)))
+    matrixU2[i][j] = matrixU2[i][j] / len(neighborhood2[i][j])
+
+plt.imshow(matrixU2, cmap='gray', interpolation='sinc')
+plt.title('Matriz U, Topologia 8x8')
+plt.show()
+
 weights2_classes, centroids2 = class_neuroniun(weights2, 3)
 print(weights2_classes, '\n')
 print(centroids2)
+
+predict_test, class_0, class_1, class_2 = predict_classes(x_test, weights2, weights2_classes, centroids2)
+print(predict_test, '\n')
+print(class_0, '\n')
+print(class_1, '\n')
+print(class_2, '\n')
 
 plt.scatter(weights2.T[0], weights2.T[1], color='g')
 plt.scatter(x_test.T[0], x_test.T[1], color='r')
@@ -320,7 +323,7 @@ plt.show()
 """Topologia 3"""
 
 start = time.time()
-map3, weights3, x_min3, y_min3, epochs3 = som(30, 30, x_train, 0.001, 150000)
+map3, weights3, neighborhood3, epochs3 = som(15, 15, x_train, 0.001, 50000)
 end = time.time()
 print(end - start, epochs3)
 
@@ -328,6 +331,18 @@ plt.imshow(map3, interpolation='nearest')
 plt.show()
 
 plt.imshow(weights3, interpolation='nearest')
+plt.show()
+
+matrixU3 = np.array(generate_empty_matrix(map3.shape[0], map3.shape[1]))
+
+for i in range(weights3.shape[0]):
+  for j in range(weights3.shape[1]):
+    for neighbor in range(len(neighborhood3[i][j])):
+      matrixU3[i][j] += np.sqrt(sum(np.power((weights3[i][j] - weights3[neighborhood3[i][j][neighbor]['x']][neighborhood3[i][j][neighbor]['y']]), 2)))
+    matrixU3[i][j] = matrixU3[i][j] / len(neighborhood3[i][j])
+
+plt.imshow(matrixU3, cmap='gray', interpolation='sinc')
+plt.title('Matriz U, Topologia 15x15')
 plt.show()
 
 weights3_classes, centroids3 = class_neuroniun(weights3, 3)
