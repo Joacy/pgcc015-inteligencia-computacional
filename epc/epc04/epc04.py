@@ -281,7 +281,7 @@ plt.show()
 start = time.time()
 weights2, neighborhood2, epochs2 = som(8, 8, x_train, 0.001, 50000)
 end = time.time()
-print('Tempo de treinamento:', end - start, '\nNúmero de Épocas:', epochs, '\n')
+print('Tempo de treinamento:', end - start, '\nNúmero de Épocas:', epochs2, '\n')
 
 matrixU2 = u_matrix(weights2, neighborhood2)
 
@@ -309,7 +309,7 @@ plt.show()
 start = time.time()
 weights3, neighborhood3, epochs3 = som(15, 15, x_train, 0.001, 50000)
 end = time.time()
-print('Tempo de treinamento:', end - start, '\nNúmero de Épocas:', epochs, '\n')
+print('Tempo de treinamento:', end - start, '\nNúmero de Épocas:', epochs3, '\n')
 
 matrixU3 = u_matrix(weights3, neighborhood3)
 
