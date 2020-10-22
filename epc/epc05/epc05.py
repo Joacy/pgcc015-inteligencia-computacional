@@ -9,23 +9,34 @@ Original file is located at
 
 pip install -U scikit-fuzzy
 
+# Importando numpy
 import numpy as np
-import skfuzzy as fuzz
-from skfuzzy import control as ctrl
-import matplotlib.pyplot as plt
 
+# Importando skfuzzy
+import skfuzzy as fuzz
+
+# Importando `control` de `skfuzzy`
+from skfuzzy import control as ctrl
+
+# Importando `pyplot` de `matplotlib`
+from matplotlib import pyplot as plt
+
+# Definindo o universo de cada antecedente e consequente
 temperature = ctrl.Antecedent(np.linspace(800, 1200, 500), 'temperature')
 bulk = ctrl.Antecedent(np.linspace(2, 12, 500), 'bulk')
 pressure = ctrl.Consequent(np.linspace(4, 12, 500), 'pressure')
 
+# Definindo as regiões de pertinência para os níveis de temperatura
 temperature['low'] = fuzz.trapmf(temperature.universe, [800, 800, 900, 1000])
 temperature['medium'] = fuzz.trimf(temperature.universe, [900, 1000, 1100])
 temperature['high'] = fuzz.trapmf(temperature.universe, [1000, 1100, 1200, 1200])
 
+# Definindo as regiões de pertinência para os níveis de volume
 bulk['small'] = fuzz.trapmf(bulk.universe, [2, 2, 4.5, 7])
 bulk['medium'] = fuzz.trimf(bulk.universe, [4.5, 7, 9.5])
 bulk['big'] = fuzz.trapmf(bulk.universe, [7, 9.5, 12, 12])
 
+# Definindo as regiões de pertinência para os níveis de pressão
 pressure['low'] = fuzz.trapmf(pressure.universe, [4, 4, 5, 8])
 pressure['medium'] = fuzz.trimf(pressure.universe, [6, 8, 10])
 pressure['high'] = fuzz.trapmf(pressure.universe, [8, 11, 12, 12])
@@ -36,40 +47,31 @@ bulk.view()
 
 pressure.view()
 
-# Regra 1: Se (Temperatura é Baixa) e (Volume é Pequeno)
-# Então (Pressão é Baixa)
+# Regra 1: Se (Temperatura é Baixa) e (Volume é Pequeno) Então (Pressão é Baixa)
 rule1 = ctrl.Rule(antecedent=(temperature['low'] & bulk['small']), consequent=pressure['low'], label='rule1')
 
-# Regra 2: Se (Temperatura é Média) e (Volume é Pequeno)
-# Então (Pressão é Baixa)
+# Regra 2: Se (Temperatura é Média) e (Volume é Pequeno) Então (Pressão é Baixa)
 rule2 = ctrl.Rule(antecedent=(temperature['medium'] & bulk['small']), consequent=pressure['low'], label='rule2')
 
-# Regra 3: Se (Temperatura é Alta) e (Volume é Pequeno)
-# Então (Pressão é Média)
+# Regra 3: Se (Temperatura é Alta) e (Volume é Pequeno) Então (Pressão é Média)
 rule3 = ctrl.Rule(antecedent=(temperature['high'] & bulk['small']), consequent=pressure['medium'], label='rule3')
 
-# Regra 4: Se (Temperatura é Baixa) e (Volume é Médio)
-# Então (Pressão é Baixa)
+# Regra 4: Se (Temperatura é Baixa) e (Volume é Médio) Então (Pressão é Baixa)
 rule4 = ctrl.Rule(antecedent=(temperature['low'] & bulk['medium']), consequent=pressure['low'], label='rule4')
 
-# Regra 5: Se (Temperatura é Média) e (Volume é Médio)
-# Então (Pressão é Média)
+# Regra 5: Se (Temperatura é Média) e (Volume é Médio) Então (Pressão é Média)
 rule5 = ctrl.Rule(antecedent=(temperature['medium'] & bulk['medium']), consequent=pressure['medium'], label='rule5')
 
-# Regra 6: Se (Temperatura é Alta) e (Volume é Médio)
-# Então (Pressão é Alta)
+# Regra 6: Se (Temperatura é Alta) e (Volume é Médio) Então (Pressão é Alta)
 rule6 = ctrl.Rule(antecedent=(temperature['high'] & bulk['medium']), consequent=pressure['high'], label='rule6')
 
-# Regra 7: Se (Temperatura é Baixa) e (Volume é Grande)
-# Então (Pressão é Média)
+# Regra 7: Se (Temperatura é Baixa) e (Volume é Grande) Então (Pressão é Média)
 rule7 = ctrl.Rule(antecedent=(temperature['low'] & bulk['big']), consequent=pressure['medium'], label='rule7')
 
-# Regra 8: Se (Temperatura é Média) e (Volume é Grande)
-# Então (Pressão é Alta)
+# Regra 8: Se (Temperatura é Média) e (Volume é Grande) Então (Pressão é Alta)
 rule8 = ctrl.Rule(antecedent=(temperature['medium'] & bulk['big']), consequent=pressure['high'], label='rule8')
 
-# Regra 9: Se (Temperatura é Alta) e (Volume é Grande)
-# Então (Pressão é Alta)
+# Regra 9: Se (Temperatura é Alta) e (Volume é Grande) Então (Pressão é Alta)
 rule9 = ctrl.Rule(antecedent=(temperature['high'] & bulk['big']), consequent=pressure['high'], label='rule9')
 
 system = ctrl.ControlSystem(rules=[rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9])
@@ -81,7 +83,7 @@ pressure_out.input['bulk'] = 11
 
 pressure_out.compute()
 
-print(pressure_out.output['pressure'])
+print('pressure:', round(pressure_out.output['pressure'], 3))
 pressure.view(sim=pressure_out)
 
 pressure_out.input['temperature'] = 920
@@ -89,7 +91,7 @@ pressure_out.input['bulk'] = 7.6
 
 pressure_out.compute()
 
-print(pressure_out.output['pressure'])
+print('pressure:', round(pressure_out.output['pressure'], 3))
 pressure.view(sim=pressure_out)
 
 pressure_out.input['temperature'] = 1050
@@ -97,7 +99,7 @@ pressure_out.input['bulk'] = 6.3
 
 pressure_out.compute()
 
-print(pressure_out.output['pressure'])
+print('pressure:', round(pressure_out.output['pressure'], 3))
 pressure.view(sim=pressure_out)
 
 pressure_out.input['temperature'] = 843
@@ -105,7 +107,7 @@ pressure_out.input['bulk'] = 8.6
 
 pressure_out.compute()
 
-print(pressure_out.output['pressure'])
+print('pressure:', round(pressure_out.output['pressure'], 3))
 pressure.view(sim=pressure_out)
 
 pressure_out.input['temperature'] = 1122
@@ -113,5 +115,5 @@ pressure_out.input['bulk'] = 5.2
 
 pressure_out.compute()
 
-print(pressure_out.output['pressure'])
+print('pressure:', round(pressure_out.output['pressure'], 3))
 pressure.view(sim=pressure_out)
