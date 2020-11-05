@@ -74,46 +74,48 @@ rule8 = ctrl.Rule(antecedent=(temperature['medium'] & bulk['big']), consequent=p
 # Regra 9: Se (Temperatura é Alta) e (Volume é Grande) Então (Pressão é Alta)
 rule9 = ctrl.Rule(antecedent=(temperature['high'] & bulk['big']), consequent=pressure['high'], label='rule9')
 
-system = ctrl.ControlSystem(rules=[rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9])
+# Definindo um controlador com as regras
+control_system = ctrl.ControlSystem(rules=[rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9])
 
-pressure_out = ctrl.ControlSystemSimulation(system)
+# Simulação do sistema de controle
+system_sim = ctrl.ControlSystemSimulation(control_system)
 
-pressure_out.input['temperature'] = 965
-pressure_out.input['bulk'] = 11
+system_sim.input['temperature'] = 965
+system_sim.input['bulk'] = 11
 
-pressure_out.compute()
+system_sim.compute()
 
-print('pressure:', round(pressure_out.output['pressure'], 3))
-pressure.view(sim=pressure_out)
+print('pressure:', round(system_sim.output['pressure'], 3))
+pressure.view(sim=system_sim)
 
-pressure_out.input['temperature'] = 920
-pressure_out.input['bulk'] = 7.6
+system_sim.input['temperature'] = 920
+system_sim.input['bulk'] = 7.6
 
-pressure_out.compute()
+system_sim.compute()
 
-print('pressure:', round(pressure_out.output['pressure'], 3))
-pressure.view(sim=pressure_out)
+print('pressure:', round(system_sim.output['pressure'], 3))
+pressure.view(sim=system_sim)
 
-pressure_out.input['temperature'] = 1050
-pressure_out.input['bulk'] = 6.3
+system_sim.input['temperature'] = 1050
+system_sim.input['bulk'] = 6.3
 
-pressure_out.compute()
+system_sim.compute()
 
-print('pressure:', round(pressure_out.output['pressure'], 3))
-pressure.view(sim=pressure_out)
+print('pressure:', round(system_sim.output['pressure'], 3))
+pressure.view(sim=system_sim)
 
-pressure_out.input['temperature'] = 843
-pressure_out.input['bulk'] = 8.6
+system_sim.input['temperature'] = 843
+system_sim.input['bulk'] = 8.6
 
-pressure_out.compute()
+system_sim.compute()
 
-print('pressure:', round(pressure_out.output['pressure'], 3))
-pressure.view(sim=pressure_out)
+print('pressure:', round(system_sim.output['pressure'], 3))
+pressure.view(sim=system_sim)
 
-pressure_out.input['temperature'] = 1122
-pressure_out.input['bulk'] = 5.2
+system_sim.input['temperature'] = 1122
+system_sim.input['bulk'] = 5.2
 
-pressure_out.compute()
+system_sim.compute()
 
-print('pressure:', round(pressure_out.output['pressure'], 3))
-pressure.view(sim=pressure_out)
+print('pressure:', round(system_sim.output['pressure'], 3))
+pressure.view(sim=system_sim)
