@@ -26,9 +26,17 @@ def generate_empty_matrix(rows, cols):
   for i in range(rows):
     line = [];
     for j in range(cols):
-      line.append(np.zeros(1)[0]);
+      line.append(0);
     matrix.append(line);
   return matrix;
+
+def generate_empty_list(rows):
+  matrix = [];
+  for i in range(rows):
+    matrix.append(0);
+  return matrix;
+
+generate_empty_list(15)
 
 def score_rules(rules):
   score = []
@@ -58,7 +66,7 @@ def delete_conflict(rules):
 def filter_rules(rules):
   class1 = set()
   class2 = set()
-  class3 = set()
+  class3 = set()  
   
   for i in range(len(rules)):
     if rules[i][4]['classe'] == 1:
@@ -68,112 +76,161 @@ def filter_rules(rules):
     elif rules[i][4]['classe'] == 3:
       class3.add(f"{rules[i][0]['region']}{rules[i][1]['region']}{rules[i][2]['region']}{rules[i][3]['region']}")
   
+  rules_class1 = []
+  rules_class2 = []
+  rules_class3 = []
   final_rules = []
+
   for el in class1:
-    rule = ''
+    text_rule = ''
+    rule = []
     for i in range(len(el)):
       if i == 0:
         if el[i] == '1':
-          rule = "Se SepalLength é small & "
+          text_rule = "Se SepalLength é small & "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule = f"Se SepalLength é medium & "
+          text_rule = f"Se SepalLength é medium & "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule = "Se SepalLength é big & "
+          text_rule = "Se SepalLength é big & "
+          rule.append({'region': 3})
       elif i == 1:
         if el[i] == '1':
-          rule += "SepalWidth é small & "
+          text_rule += "SepalWidth é small & "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule += "SepalWidth é medium & "
+          text_rule += "SepalWidth é medium & "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule += "SepalWidth é big & "
+          text_rule += "SepalWidth é big & "
+          rule.append({'region': 3})
       elif i == 2:
         if el[i] == '1':
-          rule += "PetalLength é small & "
+          text_rule += "PetalLength é small & "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule += "PetalLength é medium & "
+          text_rule += "PetalLength é medium & "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule += "PetalLength é big & "
+          text_rule += "PetalLength é big & "
+          rule.append({'region': 3})
       elif i == 3:
         if el[i] == '1':
-          rule += "PetalWidth é small, "
+          text_rule += "PetalWidth é small, "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule += "PetalWidth é medium, "
+          text_rule += "PetalWidth é medium, "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule += "PetalWidth é big, "
-    rule += "Então a planta é Iris-setosa"
-    final_rules.append(rule)
+          text_rule += "PetalWidth é big, "
+          rule.append({'region': 3})
+    rule.append({'classe': 1})
+    rules_class1.append(rule)
+    text_rule += "Então a planta é Iris-setosa"
+    final_rules.append(text_rule)
 
   for el in class2:
-    rule = ''
+    text_rule = ''
+    rule = []
     for i in range(len(el)):
       if i == 0:
         if el[i] == '1':
-          rule = "Se SepalLength é small & "
+          text_rule = "Se SepalLength é small & "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule = "Se SepalLength é medium & "
+          text_rule = f"Se SepalLength é medium & "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule = "Se SepalLength é big & "
-      if i == 1:
-        if el[i] == '1':
-          rule += "SepalWidth é small & "
-        elif el[i] == '2':
-          rule += "SepalWidth é medium & "
-        elif el[i] == '3':
-          rule += "SepalWidth é big && "
-      if i == 2:
-        if el[i] == '1':
-          rule += "PetalLength é small & "
-        elif el[i] == '2':
-          rule += "PetalLength é medium & "
-        elif el[i] == '3':
-          rule += "PetalLength é big & "
-      if i == 3:
-        if el[i] == '1':
-          rule += "PetalWidth é small, "
-        elif el[i] == '2':
-          rule += "PetalWidth é medium, "
-        elif el[i] == '3':
-          rule += "PetalWidth é big, "
-    rule += "Então a planta é Iris-versicolor"
-    final_rules.append(rule)
-     
-  for el in class3:
-    rule = ''
-    for i in range(len(el)):
-      if i == 0:
-        if el[i] == '1':
-          rule = "Se SepalLength é small & "
-        elif el[i] == '2':
-          rule = "Se SepalLength é medium & "
-        elif el[i] == '3':
-          rule = "Se SepalLength é big & "
+          text_rule = "Se SepalLength é big & "
+          rule.append({'region': 3})
       elif i == 1:
         if el[i] == '1':
-          rule += "SepalWidth é small & "
+          text_rule += "SepalWidth é small & "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule += "SepalWidth é medium & "
+          text_rule += "SepalWidth é medium & "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule += "SepalWidth é big & "
+          text_rule += "SepalWidth é big & "
+          rule.append({'region': 3})
       elif i == 2:
         if el[i] == '1':
-          rule += "PetalLength é small & "
+          text_rule += "PetalLength é small & "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule += "PetalLength é medium & "
+          text_rule += "PetalLength é medium & "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule += "PetalLength é big & "
+          text_rule += "PetalLength é big & "
+          rule.append({'region': 3})
       elif i == 3:
         if el[i] == '1':
-          rule += "PetalWidth é small, "
+          text_rule += "PetalWidth é small, "
+          rule.append({'region': 1})
         elif el[i] == '2':
-          rule += "PetalWidth é medium, "
+          text_rule += "PetalWidth é medium, "
+          rule.append({'region': 2})
         elif el[i] == '3':
-          rule += "PetalWidth é big, "
-    rule += "Então a planta é Iris-virginica"
-    final_rules.append(rule)
+          text_rule += "PetalWidth é big, "
+          rule.append({'region': 3})
+    rule.append({'classe': 2})
+    rules_class2.append(rule)
+    text_rule += "Então a planta é Iris-versicolor"
+    final_rules.append(text_rule)
 
-  return final_rules
+  for el in class3:
+    text_rule = ''
+    rule = []
+    for i in range(len(el)):
+      if i == 0:
+        if el[i] == '1':
+          text_rule = "Se SepalLength é small & "
+          rule.append({'region': 1})
+        elif el[i] == '2':
+          text_rule = f"Se SepalLength é medium & "
+          rule.append({'region': 2})
+        elif el[i] == '3':
+          text_rule = "Se SepalLength é big & "
+          rule.append({'region': 3})
+      elif i == 1:
+        if el[i] == '1':
+          text_rule += "SepalWidth é small & "
+          rule.append({'region': 1})
+        elif el[i] == '2':
+          text_rule += "SepalWidth é medium & "
+          rule.append({'region': 2})
+        elif el[i] == '3':
+          text_rule += "SepalWidth é big & "
+          rule.append({'region': 3})
+      elif i == 2:
+        if el[i] == '1':
+          text_rule += "PetalLength é small & "
+          rule.append({'region': 1})
+        elif el[i] == '2':
+          text_rule += "PetalLength é medium & "
+          rule.append({'region': 2})
+        elif el[i] == '3':
+          text_rule += "PetalLength é big & "
+          rule.append({'region': 3})
+      elif i == 3:
+        if el[i] == '1':
+          text_rule += "PetalWidth é small, "
+          rule.append({'region': 1})
+        elif el[i] == '2':
+          text_rule += "PetalWidth é medium, "
+          rule.append({'region': 2})
+        elif el[i] == '3':
+          text_rule += "PetalWidth é big, "
+          rule.append({'region': 3})
+    rule.append({'classe': 3})
+    rules_class3.append(rule)
+    text_rule += "Então a planta é Iris-virginica"
+    final_rules.append(text_rule)
 
-def wang_mendel(input_train_data, output_train_data):
+  return rules_class1, rules_class2, rules_class3, final_rules
+
+def generate_regions(x_train):
   min_sl = min(x_train[:,0])
   max_sl = max(x_train[:,0])
   sepal_length = np.linspace(min_sl, max_sl, 500)
@@ -222,6 +279,9 @@ def wang_mendel(input_train_data, output_train_data):
   # pw_me = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/4, min_pw + (max_pw-min_pw)/2, min_pw + 3*(max_pw-min_pw)/4])
   # pw_bi = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/2, max_pw, max_pw])
 
+  return sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi
+
+def wang_mendel(input_train_data, output_train_data, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi):
   # # Visualizando universos
   # fig, (ax0, ax1, ax2, ax3) = plt.subplots(nrows=4, figsize=(8, 9))
 
@@ -264,588 +324,168 @@ def wang_mendel(input_train_data, output_train_data):
     sl_medium = fuzz.interp_membership(sepal_length, sl_me, input_train_data[sample][0])
     sl_big = fuzz.interp_membership(sepal_length, sl_bi, input_train_data[sample][0])
     
+    membership_sl = [sl_small, sl_medium, sl_big]
+    
     sw_small = fuzz.interp_membership(sepal_width, sw_sm, input_train_data[sample][1])
     sw_medium = fuzz.interp_membership(sepal_width, sw_me, input_train_data[sample][1])
     sw_big = fuzz.interp_membership(sepal_width, sw_bi, input_train_data[sample][1])
+
+    membership_sw = [sw_small, sw_medium, sw_big]
     
     pl_small = fuzz.interp_membership(petal_length, pl_sm, input_train_data[sample][2])
     pl_medium = fuzz.interp_membership(petal_length, pl_me, input_train_data[sample][2])
     pl_big = fuzz.interp_membership(petal_length, pl_bi, input_train_data[sample][2])
     
+    membership_pl = [pl_small, pl_medium, pl_big]
+    
     pw_small = fuzz.interp_membership(petal_width, sl_sm, input_train_data[sample][3])
     pw_medium = fuzz.interp_membership(petal_width, sl_me, input_train_data[sample][3])
     pw_big = fuzz.interp_membership(petal_width, sl_bi, input_train_data[sample][3])
+
+    membership_pw = [pw_small, pw_medium, pw_big]
+
+    for m in range(len(membership_sl)):
+      if (membership_sl[m] == max(membership_sl)):
+        rules[sample].append({'region': m + 1 , 'interp_membership': membership_sl[m]})
     
-    if sl_small > sl_medium and sl_small > sl_big:
-      if sw_small > sw_medium and sw_small > sw_big:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-      elif sw_medium > sw_small and sw_medium > sw_big:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-      elif sw_big > sw_small and sw_big > sw_medium:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 1, 'interp_membership': sl_small})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-    elif sl_medium > sl_small and sl_medium > sl_big:
-      if sw_small > sw_medium and sw_small > sw_big:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-      elif sw_medium > sw_small and sw_medium > sw_big:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-      elif sw_big > sw_small and sw_big > sw_medium:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 2, 'interp_membership': sl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-    elif sl_big > sl_small and sl_big > sl_medium:
-      if sw_small > sw_medium and sw_small > sw_big:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 1, 'interp_membership': sw_small})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-      elif sw_medium > sw_small and sw_medium > sw_big:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 2, 'interp_membership': sw_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-      elif sw_big > sw_small and sw_big > sw_medium:
-        if pl_small > pl_medium and pl_small > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 1, 'interp_membership': pl_small})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_medium > pl_small and pl_medium > pl_big:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 2, 'interp_membership': pl_medium})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
-        elif pl_big > pl_medium and pl_big > pl_small:
-          if pw_small > pw_medium and pw_small > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 1, 'interp_membership': pw_small})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_medium > pw_small and pw_medium > pw_big:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 2, 'interp_membership': pw_medium})
-            rules[sample].append({'classe': output_train_data[sample]})
-          elif pw_big > pw_small and pw_big > pw_medium:
-            rules[sample].append({'region': 3, 'interp_membership': sl_big})
-            rules[sample].append({'region': 3, 'interp_membership': sw_big})
-            rules[sample].append({'region': 3, 'interp_membership': pl_big})
-            rules[sample].append({'region': 3, 'interp_membership': pw_big})
-            rules[sample].append({'classe': output_train_data[sample]})
+    for m in range(len(membership_sw)):
+      if (membership_sw[m] == max(membership_sw)):
+        rules[sample].append({'region': m + 1, 'interp_membership': membership_sw[m]})
+
+    for m in range(len(membership_pl)):
+      if (membership_pl[m] == max(membership_pl)):
+        rules[sample].append({'region': m + 1, 'interp_membership': membership_pl[m]})
+    
+    for m in range(len(membership_pw)):
+      if (membership_pw[m] == max(membership_pw)):
+        rules[sample].append({'region': m + 1, 'interp_membership': membership_pw[m]})
+    rules[sample].append({'classe': output_train_data[sample]})
 
   return rules
 
+def classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi, rules_class1, rules_class2, rules_class3):
+  classes = generate_empty_list(y_test.shape[0])
+  t_norm1 = generate_empty_list(len(rules_class1))
+  t_norm2 = generate_empty_list(len(rules_class2))
+  t_norm3 = generate_empty_list(len(rules_class3))
+
+  for sample in range(x_test.shape[0]):
+    sl_small = fuzz.interp_membership(sepal_length, sl_sm, x_test[sample][0])
+    sl_medium = fuzz.interp_membership(sepal_length, sl_me, x_test[sample][0])
+    sl_big = fuzz.interp_membership(sepal_length, sl_bi, x_test[sample][0])
+    
+    membership_sl = [sl_small, sl_medium, sl_big]
+    
+    sw_small = fuzz.interp_membership(sepal_width, sw_sm, x_test[sample][1])
+    sw_medium = fuzz.interp_membership(sepal_width, sw_me, x_test[sample][1])
+    sw_big = fuzz.interp_membership(sepal_width, sw_bi, x_test[sample][1])
+
+    membership_sw = [sw_small, sw_medium, sw_big]
+    
+    pl_small = fuzz.interp_membership(petal_length, pl_sm, x_test[sample][2])
+    pl_medium = fuzz.interp_membership(petal_length, pl_me, x_test[sample][2])
+    pl_big = fuzz.interp_membership(petal_length, pl_bi, x_test[sample][2])
+    
+    membership_pl = [pl_small, pl_medium, pl_big]
+    
+    pw_small = fuzz.interp_membership(petal_width, sl_sm, x_test[sample][3])
+    pw_medium = fuzz.interp_membership(petal_width, sl_me, x_test[sample][3])
+    pw_big = fuzz.interp_membership(petal_width, sl_bi, x_test[sample][3])
+
+    membership_pw = [pw_small, pw_medium, pw_big]
+
+    input_regions = []
+    for m in range(len(membership_sl)):
+      if (membership_sl[m] == max(membership_sl)):
+        input_regions.append(m + 1)
+
+    for m in range(len(membership_sw)):
+      if (membership_sw[m] == max(membership_sw)):
+        input_regions.append(m + 1)
+
+    for m in range(len(membership_pl)):
+      if (membership_pl[m] == max(membership_pl)):
+        input_regions.append(m + 1)
+
+    for m in range(len(membership_pw)):
+      if (membership_pw[m] == max(membership_pw)):
+        input_regions.append(m + 1)
+
+    for i in range(len(rules_class1)):
+      if (rules_class1[i][0]['region'] == 1) and (rules_class1[i][1]['region'] == input_regions[1]) and (rules_class1[i][2]['region'] == input_regions[2]) and (rules_class1[i][3]['region'] == input_regions[3]):
+        classes[sample] = 1
+    
+    for i in range(len(rules_class2)):
+      if (rules_class2[i][0]['region'] == input_regions[0]) and (rules_class2[i][1]['region'] == input_regions[1]) and (rules_class2[i][2]['region'] == input_regions[2]) and (rules_class2[i][3]['region'] == input_regions[3]):
+        classes[sample] = 2
+    
+    for i in range(len(rules_class3)):
+      if (rules_class3[i][0]['region'] == input_regions[0]) and (rules_class3[i][1]['region'] == input_regions[1]) and (rules_class3[i][2]['region'] == input_regions[2]) and (rules_class3[i][3]['region'] == input_regions[3]):
+        classes[sample] = 3
+
+  accuracy = 0
+  for c in range(y_test.shape[0]):
+    if classes[c] == y_test[c]:
+      accuracy = accuracy + 1
+
+  accuracy = (accuracy / y_test.shape[0]) * 100
+
+  return classes, accuracy
+
+acc_mrfc = []
 # Importando dados de treinamento e dados de teste para Iris plants data set
- for i in range(10):
-   train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',')
-   test_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tst.txt', sep=',')
-   
-   # Separando entradas e saídas para o treinamento
-   x_train = np.array(train_data.iloc[:,0:4])
-   y_train_text = train_data.iloc[:,4:5]
-   out_train = np.array(y_train_text)
+for i in range(10):
+  train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',')
+  test_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tst.txt', sep=',')
+  
+  # Separando entradas e saídas para o treinamento
+  x_train = np.array(train_data.iloc[:,0:4])
+  y_train_text = train_data.iloc[:,4:5]
+  out_train = np.array(y_train_text)
 
-   y_train = []
-   for j in range(y_train_text.size):
-      if out_train[j] == ' Iris-setosa':
-        y_train.append(1)
-      elif out_train[j] == ' Iris-versicolor':
-        y_train.append(2)
-      elif out_train[j] == ' Iris-virginica':
-        y_train.append(3)
+  y_train = []
+  for j in range(y_train_text.size):
+    if out_train[j] == ' Iris-setosa':
+      y_train.append(1)
+    elif out_train[j] == ' Iris-versicolor':
+      y_train.append(2)
+    elif out_train[j] == ' Iris-virginica':
+      y_train.append(3)
+  
+  y_train = np.array(y_train)
+  
+  # Separando entradas e saídas para o teste
+  x_test = np.array(test_data.iloc[:,0:4])
+  y_test_text = np.array(test_data.iloc[:,4:5])
+  out_test = np.array(y_test_text)
+  
+  y_test = []
+  for j in range(y_test_text.size):
+    if out_test[j] == ' Iris-setosa':
+      y_test.append(1)
+    elif out_test[j] == ' Iris-versicolor':
+      y_test.append(2)
+    elif out_test[j] == ' Iris-virginica':
+      y_test.append(3)
+  y_test = np.array(y_test)
+  
+  sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi = generate_regions(x_train)
+  rules = wang_mendel(x_train, y_train, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi)
+  rules_without_conflict = delete_conflict(rules)
+  rules_class1, rules_class2, rules_class3, final_rules = filter_rules(rules_without_conflict)
+  classes_mrfc, accuracy_mrfc = classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi, rules_class1, rules_class2, rules_class3)
+  
+  acc_mrfc.append(accuracy_mrfc)
+  
+  print('Fold:', i+1, '\nNúmero de Regras:', len(final_rules))
+  for rule in final_rules:
+    print(rule)
+  print('\n')
+  
+  print(classes_mrfc)
+  print('\n')
 
-   y_train = np.array(y_train)
-
-   # Separando entradas e saídas para o teste
-   x_test = np.array(test_data.iloc[:,0:4])
-   y_test_text = np.array(test_data.iloc[:,4:5])
-   out_test = np.array(y_test_text)
-
-   y_test = []
-   for j in range(y_test_text.size):
-      if out_test[j] == ' Iris-setosa':
-        y_test.append(1)
-      elif out_test[j] == ' Iris-versicolor':
-        y_test.append(2)
-      elif out_test[j] == ' Iris-virginica':
-        y_test.append(3)
-
-   y_test = np.array(y_test)
-   
-   rules = wang_mendel(x_train, y_train)
-   rules_without_conflict = delete_conflict(rules)
-   final_rules = filter_rules(rules_without_conflict)
-
-   print('Fold:', i+1, '\nNúmero de Regras:', len(final_rules))
-   for rule in final_rules:
-     print(rule)
-   print('\n')
+acc_mrfc = np.array(acc_mrfc)
+print(acc_mrfc.round(2))
+print(np.mean(acc_mrfc).round(2))
+print(np.std(acc_mrfc).round(2))
