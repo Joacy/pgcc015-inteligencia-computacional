@@ -235,13 +235,13 @@ def generate_regions(x_train):
   max_sl = max(x_train[:,0])
   sepal_length = np.linspace(min_sl, max_sl, 500)
 
-  sl_sm = fuzz.trapmf(sepal_length, [min_sl, min_sl, min_sl + (max_sl-min_sl)/4, min_sl + (max_sl-min_sl)/2])
-  sl_me = fuzz.trimf(sepal_length, [min_sl + (max_sl-min_sl)/4, min_sl + (max_sl-min_sl)/2, min_sl + 3*(max_sl-min_sl)/4])
-  sl_bi = fuzz.trapmf(sepal_length, [min_sl + (max_sl-min_sl)/2, min_sl + 3*(max_sl-min_sl)/4, max_sl, max_sl])
-
-  # sl_sm = fuzz.trimf(sepal_length, [min_sl, min_sl, min_sl + (max_sl-min_sl)/2])
+  # sl_sm = fuzz.trapmf(sepal_length, [min_sl, min_sl, min_sl + (max_sl-min_sl)/4, min_sl + (max_sl-min_sl)/2])
   # sl_me = fuzz.trimf(sepal_length, [min_sl + (max_sl-min_sl)/4, min_sl + (max_sl-min_sl)/2, min_sl + 3*(max_sl-min_sl)/4])
-  # sl_bi = fuzz.trimf(sepal_length, [min_sl + (max_sl-min_sl)/2, max_sl, max_sl])
+  # sl_bi = fuzz.trapmf(sepal_length, [min_sl + (max_sl-min_sl)/2, min_sl + 3*(max_sl-min_sl)/4, max_sl, max_sl])
+
+  sl_sm = fuzz.trimf(sepal_length, [min_sl, min_sl, min_sl + (max_sl-min_sl)/2])
+  sl_me = fuzz.trimf(sepal_length, [min_sl + (max_sl-min_sl)/4, min_sl + (max_sl-min_sl)/2, min_sl + 3*(max_sl-min_sl)/4])
+  sl_bi = fuzz.trimf(sepal_length, [min_sl + (max_sl-min_sl)/2, max_sl, max_sl])
 
   min_sw = min(x_train[:,1])
   max_sw = max(x_train[:,1])
@@ -259,25 +259,25 @@ def generate_regions(x_train):
   max_pl = max(x_train[:,2])
   petal_length = np.linspace(min_pl, max_pl, 500)
 
-  pl_sm = fuzz.trapmf(petal_length, [min_pl, min_pl, min_pl + (max_pl-min_pl)/4, min_pl + (max_pl-min_pl)/2])
-  pl_me = fuzz.trimf(petal_length, [min_pl + (max_pl-min_pl)/4, min_pl + (max_pl-min_pl)/2, min_pl + 3*(max_pl-min_pl)/4])
-  pl_bi = fuzz.trapmf(petal_length, [min_pl + (max_pl-min_pl)/2, min_pl + 3*(max_pl-min_pl)/4, max_pl, max_pl])
-  
-  # pl_sm = fuzz.trimf(petal_length, [min_pl, min_pl, min_pl + (max_pl-min_pl)/2])
+  # pl_sm = fuzz.trapmf(petal_length, [min_pl, min_pl, min_pl + (max_pl-min_pl)/4, min_pl + (max_pl-min_pl)/2])
   # pl_me = fuzz.trimf(petal_length, [min_pl + (max_pl-min_pl)/4, min_pl + (max_pl-min_pl)/2, min_pl + 3*(max_pl-min_pl)/4])
-  # pl_bi = fuzz.trimf(petal_length, [min_pl + (max_pl-min_pl)/2, max_pl, max_pl])
+  # pl_bi = fuzz.trapmf(petal_length, [min_pl + (max_pl-min_pl)/2, min_pl + 3*(max_pl-min_pl)/4, max_pl, max_pl])
+  
+  pl_sm = fuzz.trimf(petal_length, [min_pl, min_pl, min_pl + (max_pl-min_pl)/2])
+  pl_me = fuzz.trimf(petal_length, [min_pl + (max_pl-min_pl)/4, min_pl + (max_pl-min_pl)/2, min_pl + 3*(max_pl-min_pl)/4])
+  pl_bi = fuzz.trimf(petal_length, [min_pl + (max_pl-min_pl)/2, max_pl, max_pl])
 
   min_pw = min(x_train[:,3])
   max_pw = max(x_train[:,3])
   petal_width = np.linspace(min_pw, max_pw, 500)
 
-  pw_sm = fuzz.trapmf(petal_width, [min_pw, min_pw, min_pw + (max_pw-min_pw)/4, min_pw + (max_pw-min_pw)/2])
-  pw_me = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/4, min_pw + (max_pw-min_pw)/2, min_pw + 3*(max_pw-min_pw)/4])
-  pw_bi = fuzz.trapmf(petal_width, [min_pw + (max_pw-min_pw)/2, min_pw + 3*(max_pw-min_pw)/4, max_pw, max_pw])
-
-  # pw_sm = fuzz.trimf(petal_width, [min_pw, min_pw, min_pw + (max_pw-min_pw)/2])
+  # pw_sm = fuzz.trapmf(petal_width, [min_pw, min_pw, min_pw + (max_pw-min_pw)/4, min_pw + (max_pw-min_pw)/2])
   # pw_me = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/4, min_pw + (max_pw-min_pw)/2, min_pw + 3*(max_pw-min_pw)/4])
-  # pw_bi = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/2, max_pw, max_pw])
+  # pw_bi = fuzz.trapmf(petal_width, [min_pw + (max_pw-min_pw)/2, min_pw + 3*(max_pw-min_pw)/4, max_pw, max_pw])
+
+  pw_sm = fuzz.trimf(petal_width, [min_pw, min_pw, min_pw + (max_pw-min_pw)/2])
+  pw_me = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/4, min_pw + (max_pw-min_pw)/2, min_pw + 3*(max_pw-min_pw)/4])
+  pw_bi = fuzz.trimf(petal_width, [min_pw + (max_pw-min_pw)/2, max_pw, max_pw])
 
   return sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi
 
@@ -364,7 +364,8 @@ def wang_mendel(input_train_data, output_train_data, sepal_length, sl_sm, sl_me,
   return rules
 
 def classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi, rules_class1, rules_class2, rules_class3):
-  classes = generate_empty_list(y_test.shape[0])
+  classes_mrfc = generate_empty_list(y_test.shape[0])
+  classes_mrfg = generate_empty_list(y_test.shape[0])
   t_norm1 = generate_empty_list(len(rules_class1))
   t_norm2 = generate_empty_list(len(rules_class2))
   t_norm3 = generate_empty_list(len(rules_class3))
@@ -374,65 +375,115 @@ def classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_
     sl_medium = fuzz.interp_membership(sepal_length, sl_me, x_test[sample][0])
     sl_big = fuzz.interp_membership(sepal_length, sl_bi, x_test[sample][0])
     
-    membership_sl = [sl_small, sl_medium, sl_big]
+    membership_sl = {'1': sl_small, '2': sl_medium, '3': sl_big}
     
     sw_small = fuzz.interp_membership(sepal_width, sw_sm, x_test[sample][1])
     sw_medium = fuzz.interp_membership(sepal_width, sw_me, x_test[sample][1])
     sw_big = fuzz.interp_membership(sepal_width, sw_bi, x_test[sample][1])
 
-    membership_sw = [sw_small, sw_medium, sw_big]
+    membership_sw = {'1': sw_small, '2': sw_medium, '3': sw_big}
     
     pl_small = fuzz.interp_membership(petal_length, pl_sm, x_test[sample][2])
     pl_medium = fuzz.interp_membership(petal_length, pl_me, x_test[sample][2])
     pl_big = fuzz.interp_membership(petal_length, pl_bi, x_test[sample][2])
     
-    membership_pl = [pl_small, pl_medium, pl_big]
+    membership_pl = {'1': pl_small, '2': pl_medium, '3': pl_big}
     
     pw_small = fuzz.interp_membership(petal_width, sl_sm, x_test[sample][3])
     pw_medium = fuzz.interp_membership(petal_width, sl_me, x_test[sample][3])
     pw_big = fuzz.interp_membership(petal_width, sl_bi, x_test[sample][3])
 
-    membership_pw = [pw_small, pw_medium, pw_big]
+    membership_pw = {'1': pw_small, '2': pw_medium, '3': pw_big}
 
-    input_regions = []
-    for m in range(len(membership_sl)):
-      if (membership_sl[m] == max(membership_sl)):
-        input_regions.append(m + 1)
+    # input_regions = []
+    # for m in range(len(membership_sl)):
+    #   if (membership_sl[m] == max(membership_sl)):
+    #     input_regions.append(m + 1)
 
-    for m in range(len(membership_sw)):
-      if (membership_sw[m] == max(membership_sw)):
-        input_regions.append(m + 1)
+    # for m in range(len(membership_sw)):
+    #   if (membership_sw[m] == max(membership_sw)):
+    #     input_regions.append(m + 1)
 
-    for m in range(len(membership_pl)):
-      if (membership_pl[m] == max(membership_pl)):
-        input_regions.append(m + 1)
+    # for m in range(len(membership_pl)):
+    #   if (membership_pl[m] == max(membership_pl)):
+    #     input_regions.append(m + 1)
 
-    for m in range(len(membership_pw)):
-      if (membership_pw[m] == max(membership_pw)):
-        input_regions.append(m + 1)
+    # for m in range(len(membership_pw)):
+    #   if (membership_pw[m] == max(membership_pw)):
+    #     input_regions.append(m + 1)
 
     for i in range(len(rules_class1)):
-      if (rules_class1[i][0]['region'] == 1) and (rules_class1[i][1]['region'] == input_regions[1]) and (rules_class1[i][2]['region'] == input_regions[2]) and (rules_class1[i][3]['region'] == input_regions[3]):
-        classes[sample] = 1
-    
+      norm = []
+      norm.append(membership_sl[f"{rules_class1[i][0]['region']}"])
+      norm.append(membership_sw[f"{rules_class1[i][1]['region']}"])
+      norm.append(membership_pl[f"{rules_class1[i][2]['region']}"])
+      norm.append(membership_pw[f"{rules_class1[i][3]['region']}"])
+      t_norm1[i] = min(norm)
+
     for i in range(len(rules_class2)):
-      if (rules_class2[i][0]['region'] == input_regions[0]) and (rules_class2[i][1]['region'] == input_regions[1]) and (rules_class2[i][2]['region'] == input_regions[2]) and (rules_class2[i][3]['region'] == input_regions[3]):
-        classes[sample] = 2
-    
+      norm = []
+      norm.append(membership_sl[f"{rules_class2[i][0]['region']}"])
+      norm.append(membership_sw[f"{rules_class2[i][1]['region']}"])
+      norm.append(membership_pl[f"{rules_class2[i][2]['region']}"])
+      norm.append(membership_pw[f"{rules_class2[i][3]['region']}"])
+      t_norm2[i] = min(norm)
+
     for i in range(len(rules_class3)):
-      if (rules_class3[i][0]['region'] == input_regions[0]) and (rules_class3[i][1]['region'] == input_regions[1]) and (rules_class3[i][2]['region'] == input_regions[2]) and (rules_class3[i][3]['region'] == input_regions[3]):
-        classes[sample] = 3
+      norm = []
+      norm.append(membership_sl[f"{rules_class3[i][0]['region']}"])
+      norm.append(membership_sw[f"{rules_class3[i][1]['region']}"])
+      norm.append(membership_pl[f"{rules_class3[i][2]['region']}"])
+      norm.append(membership_pw[f"{rules_class3[i][3]['region']}"])
+      t_norm3[i] = min(norm)
+    
+    if max(t_norm1) > 0 and max(t_norm1) > max(t_norm2) and max(t_norm1) > max(t_norm3):
+      classes_mrfc[sample] = 1
+    elif max(t_norm2) > 0 and max(t_norm2) > max(t_norm1) and max(t_norm2) > max(t_norm3):
+      classes_mrfc[sample] = 2
+    elif max(t_norm3) > 0 and max(t_norm3) > max(t_norm1) and max(t_norm3) > max(t_norm2):
+      classes_mrfc[sample] = 3
 
-  accuracy = 0
+    n1 = t_norm1.copy()
+    # n1 = []
+    # for norm in t_norm1:
+    #   if norm != 0:
+    #     n1.append(norm)
+    n2 = t_norm2.copy()
+    # n2 = []
+    # for norm in t_norm2:
+    #   if norm != 0:
+    #     n2.append(norm)
+    n3 = t_norm3.copy()
+    # n3 = []
+    # for norm in t_norm3:
+    #   if norm != 0:
+    #     n3.append(norm)
+
+    if len(n1) > 0 and np.mean(np.array(n1)) > np.mean(np.array(n2)) and np.mean(np.array(n1)) > np.mean(np.array(n3)):
+      classes_mrfg[sample] = 1
+    elif len(n2) > 0 and np.mean(np.array(n2)) > np.mean(np.array(n1)) and np.mean(np.array(n2)) > np.mean(np.array(n3)):
+      classes_mrfg[sample] = 2
+    elif len(n3) > 0 and np.mean(np.array(n3)) > np.mean(np.array(n1)) and np.mean(np.array(n3)) > np.mean(np.array(n2)):
+      classes_mrfg[sample] = 3
+
+  accuracy_mrfc = 0
   for c in range(y_test.shape[0]):
-    if classes[c] == y_test[c]:
-      accuracy = accuracy + 1
+    if classes_mrfc[c] == y_test[c]:
+      accuracy_mrfc = accuracy_mrfc + 1
 
-  accuracy = (accuracy / y_test.shape[0]) * 100
+  accuracy_mrfc = (accuracy_mrfc / y_test.shape[0]) * 100
 
-  return classes, accuracy
+  accuracy_mrfg = 0
+  for c in range(y_test.shape[0]):
+    if classes_mrfg[c] == y_test[c]:
+      accuracy_mrfg = accuracy_mrfg + 1
+
+  accuracy_mrfg = (accuracy_mrfg / y_test.shape[0]) * 100
+
+  return classes_mrfc, accuracy_mrfc, classes_mrfg, accuracy_mrfg
 
 acc_mrfc = []
+acc_mrfg = []
 # Importando dados de treinamento e dados de teste para Iris plants data set
 for i in range(10):
   train_data = pd.read_csv('https://raw.githubusercontent.com/Joacy/pgcc015-inteligencia-computacional/master/epc/epc03/iris-plants/iris-10-'+ str(i + 1) +'tra.txt', sep=',')
@@ -473,19 +524,30 @@ for i in range(10):
   rules = wang_mendel(x_train, y_train, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi)
   rules_without_conflict = delete_conflict(rules)
   rules_class1, rules_class2, rules_class3, final_rules = filter_rules(rules_without_conflict)
-  classes_mrfc, accuracy_mrfc = classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi, rules_class1, rules_class2, rules_class3)
+  classes_mrfc, accuracy_mrfc, classes_mrfg, accuracy_mrfg = classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi, rules_class1, rules_class2, rules_class3)
   
   acc_mrfc.append(accuracy_mrfc)
+  acc_mrfg.append(accuracy_mrfg)
   
   print('Fold:', i+1, '\nNúmero de Regras:', len(final_rules))
   for rule in final_rules:
     print(rule)
   print('\n')
   
-  print(classes_mrfc)
+  print('mrfc:', classes_mrfc)
+  print('mrfg:', classes_mrfg)
+  print(classes_mrfc == classes_mrfg)
   print('\n')
 
+print('mrfc:')
 acc_mrfc = np.array(acc_mrfc)
 print(acc_mrfc.round(2))
 print(np.mean(acc_mrfc).round(2))
 print(np.std(acc_mrfc).round(2))
+print('\n')
+
+print('mrfg:')
+acc_mrfg = np.array(acc_mrfg)
+print(acc_mrfg.round(2))
+print(np.mean(acc_mrfg).round(2))
+print(np.std(acc_mrfg).round(2))
