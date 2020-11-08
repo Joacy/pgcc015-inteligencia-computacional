@@ -402,6 +402,13 @@ def hisao_ishibuchi(input_train_data, output_train_data, sepal_length, sl_sm, sl
     rules_with_degree[r].append({'degree': degree(betas)})
   return rules_with_degree
 
+def list_no_zero(list):
+  aux = []
+  for l in list:
+    if l > 0:
+      aux.append(l)
+  return aux
+
 def classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_sm, sw_me, sw_bi, petal_length, pl_sm, pl_me, pl_bi, petal_width, pw_sm, pw_me, pw_bi, rules1, rules2, rules3):
   classes_mrfc = generate_empty_list(y_test.shape[0])
   classes_mrfg = generate_empty_list(y_test.shape[0])
@@ -409,11 +416,11 @@ def classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_
   rules_class1 = rules1.copy()
   rules_class2 = rules2.copy()
   rules_class3 = rules3.copy()
-
-  t_norm1 = []
-  t_norm2 = []
-  t_norm3 = []
-
+  
+  t_norm1 = generate_empty_list(len(rules_class1))
+  t_norm2 = generate_empty_list(len(rules_class2))
+  t_norm3 = generate_empty_list(len(rules_class3))
+  
   for sample in range(x_test.shape[0]):
     sl_small = fuzz.interp_membership(sepal_length, sl_sm, x_test[sample][0])
     sl_medium = fuzz.interp_membership(sepal_length, sl_me, x_test[sample][0])
@@ -441,57 +448,68 @@ def classify(x_test, y_test, sepal_length, sl_sm, sl_me, sepal_width, sl_bi, sw_
 
     for i in range(len(rules_class1)):
       norm = []
-      if membership_sl[f"{rules_class1[i][0]['region']}"] != 0:
-        norm.append(membership_sl[f"{rules_class1[i][0]['region']}"])
-      if membership_sw[f"{rules_class1[i][1]['region']}"] != 0:
-        norm.append(membership_sw[f"{rules_class1[i][1]['region']}"])
-      if membership_pl[f"{rules_class1[i][2]['region']}"] != 0:
-        norm.append(membership_pl[f"{rules_class1[i][2]['region']}"])
-      if membership_pw[f"{rules_class1[i][3]['region']}"] != 0:
-        norm.append(membership_pw[f"{rules_class1[i][3]['region']}"])
-      if len(norm) > 0:
-        t_norm1.append(min(norm))
+      norm.append(membership_sl[f"{rules_class1[i][0]['region']}"])
+      norm.append(membership_sw[f"{rules_class1[i][1]['region']}"])
+      norm.append(membership_pl[f"{rules_class1[i][2]['region']}"])
+      norm.append(membership_pw[f"{rules_class1[i][3]['region']}"])
+      t_norm1[i] = min(norm)
 
     for i in range(len(rules_class2)):
       norm = []
-      if membership_sl[f"{rules_class2[i][0]['region']}"] != 0:
-        norm.append(membership_sl[f"{rules_class2[i][0]['region']}"])
-      if membership_sw[f"{rules_class2[i][1]['region']}"] != 0:
-        norm.append(membership_sw[f"{rules_class2[i][1]['region']}"])
-      if membership_pl[f"{rules_class2[i][2]['region']}"] != 0:
-        norm.append(membership_pl[f"{rules_class2[i][2]['region']}"])
-      if membership_pw[f"{rules_class2[i][3]['region']}"] != 0:
-        norm.append(membership_pw[f"{rules_class2[i][3]['region']}"])
-      if len(norm) > 0:
-        t_norm2.append(min(norm))
+      norm.append(membership_sl[f"{rules_class2[i][0]['region']}"])
+      norm.append(membership_sw[f"{rules_class2[i][1]['region']}"])
+      norm.append(membership_pl[f"{rules_class2[i][2]['region']}"])
+      norm.append(membership_pw[f"{rules_class2[i][3]['region']}"])
+      t_norm2[i] = min(norm)
 
     for i in range(len(rules_class3)):
       norm = []
-      if membership_sl[f"{rules_class3[i][0]['region']}"] != 0:
-        norm.append(membership_sl[f"{rules_class3[i][0]['region']}"])
-      if membership_sw[f"{rules_class3[i][1]['region']}"] != 0:
-        norm.append(membership_sw[f"{rules_class3[i][1]['region']}"])
-      if membership_pl[f"{rules_class3[i][2]['region']}"] != 0:
-        norm.append(membership_pl[f"{rules_class3[i][2]['region']}"])
-      if membership_pw[f"{rules_class3[i][3]['region']}"] != 0:
-        norm.append(membership_pw[f"{rules_class3[i][3]['region']}"])
-      if len(norm) > 0:
-        t_norm3.append(min(norm))
-
-    if len(t_norm1) > 0 and max(t_norm1) >= max(t_norm2) and max(t_norm1) >= max(t_norm3):
+      norm.append(membership_sl[f"{rules_class3[i][0]['region']}"])
+      norm.append(membership_sw[f"{rules_class3[i][1]['region']}"])
+      norm.append(membership_pl[f"{rules_class3[i][2]['region']}"])
+      norm.append(membership_pw[f"{rules_class3[i][3]['region']}"])
+      t_norm3[i] = min(norm)
+  
+    if len(t_norm1) > 0 and max(t_norm1) > max(t_norm2) and max(t_norm1) > max(t_norm3):
       classes_mrfc[sample] = 1
-    if len(t_norm2) > 0 and max(t_norm2) >= max(t_norm1) and max(t_norm2) >= max(t_norm3):
+    if len(t_norm2) > 0 and max(t_norm2) > max(t_norm1) and max(t_norm2) > max(t_norm3):
       classes_mrfc[sample] = 2
-    if len(t_norm3) > 0 and max(t_norm3) >= max(t_norm1) and max(t_norm3) >= max(t_norm2):
+    if len(t_norm3) > 0 and max(t_norm3) > max(t_norm1) and max(t_norm3) > max(t_norm2):
       classes_mrfc[sample] = 3
 
-    if len(t_norm1) > 0 and np.mean(np.array(t_norm1)) >= np.mean(np.array(t_norm2)) and np.mean(np.array(t_norm1)) >= np.mean(np.array(t_norm3)):
+    n1 = list_no_zero(t_norm1)
+    n2 = list_no_zero(t_norm2)
+    n3 = list_no_zero(t_norm3)
+    
+    if len(n1) > 0 and len(n2) > 0 and len(n3) > 0:
+      if np.mean(n1) > np.mean(n2) and np.mean(n1) > np.mean(n3):
+        classes_mrfg[sample] = 1
+      if np.mean(n2) > np.mean(n1) and np.mean(n2) > np.mean(n3):
+        classes_mrfg[sample] = 2
+      if np.mean(n3) > np.mean(n1) and np.mean(n3) > np.mean(n2):
+        classes_mrfg[sample] = 3
+    elif len(n1) > 0 and len(n2) > 0:
+      if np.mean(n1) > np.mean(n2):
+        classes_mrfg[sample] = 1
+      elif np.mean(n1) < np.mean(n2):
+        classes_mrfg[sample] = 2
+    elif len(n1) > 0 and len(n3) > 0:
+      if np.mean(n1) > np.mean(n3):
+        classes_mrfg[sample] = 1
+      elif np.mean(n1) < np.mean(n3):
+        classes_mrfg[sample] = 3
+    elif len(n2) > 0 and len(n3) > 0:
+      if np.mean(n2) > np.mean(n3):
+        classes_mrfg[sample] = 2
+      elif np.mean(n2) < np.mean(n3):
+        classes_mrfg[sample] = 3
+    elif len(n1) > 0:
       classes_mrfg[sample] = 1
-    if len(t_norm2) > 0 and np.mean(np.array(t_norm2)) >= np.mean(np.array(t_norm1)) and np.mean(np.array(t_norm2)) >= np.mean(np.array(t_norm3)):
+    elif len(n2) > 0:
       classes_mrfg[sample] = 2
-    if len(t_norm3) > 0 and np.mean(np.array(t_norm3)) >= np.mean(np.array(t_norm1)) and np.mean(np.array(t_norm3)) >= np.mean(np.array(t_norm2)):
+    elif len(n3) > 0:
       classes_mrfg[sample] = 3
-
+    
   accuracy_mrfc = 0
   for c in range(y_test.shape[0]):
     if classes_mrfc[c] == y_test[c]:
@@ -571,7 +589,6 @@ for i in range(10):
 
   print('mrfc:', classes_mrfc)
   print('mrfg:', classes_mrfg)
-  print(classes_mrfc == classes_mrfg)
   print('\n')
 
   # Para as regras com peso
@@ -589,7 +606,6 @@ for i in range(10):
 
   print('mrfc_degree:', classes_mrfc_degree)
   print('mrfg_degree:', classes_mrfg_degree)
-  print(classes_mrfc_degree == classes_mrfg_degree)
   print('\n')
 
 print('mrfc:')
@@ -599,18 +615,18 @@ print(np.mean(acc_mrfc).round(2))
 print(np.std(acc_mrfc).round(2))
 print('\n')
 
-print('mrfg:')
-acc_mrfg = np.array(acc_mrfg)
-print(acc_mrfg.round(2))
-print(np.mean(acc_mrfg).round(2))
-print(np.std(acc_mrfg).round(2))
-print('\n')
-
 print('mrfc_degree:')
 acc_mrfc_degree = np.array(acc_mrfc_degree)
 print(acc_mrfc_degree.round(2))
 print(np.mean(acc_mrfc_degree).round(2))
 print(np.std(acc_mrfc_degree).round(2))
+print('\n')
+
+print('mrfg:')
+acc_mrfg = np.array(acc_mrfg)
+print(acc_mrfg.round(2))
+print(np.mean(acc_mrfg).round(2))
+print(np.std(acc_mrfg).round(2))
 print('\n')
 
 print('mrfg_degree:')
